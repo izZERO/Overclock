@@ -23,6 +23,7 @@ E-commerce site for PC-Parts with Inventory management, Analytical Dashboard and
 9. I want to view my order, and track its current status.
 10. I want to utilise the chatbot and ask him questions for guidance.
 11. I want to add items to my wishlist.
+12. I want my website to actually work
 
 ### As an Admin, my functional requirements are:
 1. I want to be able to change the quantity of stocks.
