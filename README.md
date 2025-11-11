@@ -10,11 +10,35 @@
 # ***Description***
 E-commerce site for PC-Parts with Inventory management, Analytical Dashboard and Chatbot
 
+# ***User stories***
+### As a user, my functional requirements are:
+1. I want to be able to browse for products without registering.
+2. I want to view the details of products without registering.
+3. I want to register as a new user, or login as an existing user.
+4. I want to add the necessary details to my profile, such as address.
+5. I want to be able to add items to my cart with the proper quantity selected.
+6. I want to be able to change the quantity of items placed in my cart.
+7. I want to be able to remove items from my cart.
+8. I want to place an order, and finalise my transaction.
+9. I want to view my order, and track its current status.
+10. I want to utilise the chatbot and ask him questions for guidance.
+11. I want to add items to my wishlist.
+
+### As an Admin, my functional requirements are:
+1. I want to be able to change the quantity of stocks.
+2. I want to view an analytical dashboard to track which items sold best, and worst.
+3. I want to view orders placed by customers.
+4. I want to update the status of customer orders.
+5.
+
+
+
 ***
 # ***technologies Used***
 1. HTML5 (Hyper Text Markup Language 5)
 2. CSS (Cascading Style Sheets)
-3. JS (Vanilla JavaScript)
+3. Python (Object Oriented Language), Django Library
+4. PostgreSQL, pgAdmin 4
 
 
 ***
@@ -38,8 +62,9 @@ E-commerce site for PC-Parts with Inventory management, Analytical Dashboard and
 
 
 # ***Future Work***
-- [ ] Hard Mode
-- [ ] Timer Mode
+- [ ] Live chat consultation
+- [ ] Search bar
+- [ ] Sort items by quantity, price, and such.
 - [ ] Toggle Theme (Dark / Light) Modes
 
 # ***Credits***
