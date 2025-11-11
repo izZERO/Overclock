@@ -5,5 +5,6 @@ urlpatterns = [
     # Signup
     path('accounts/signup/', views.signup, name='signup'),
     path("", views.landing, name="landing"),
+    path("profile/edit", views.profile, name='profile-edit')
 ]
 
