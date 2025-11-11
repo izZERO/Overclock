@@ -44,3 +44,16 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order for {self.user_id.username} placed on {self.date_placed}"
+
+class Order_Detail(models.Model):
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    order_cost = models.FloatField()
+
+    def save(self, *args, **kwargs):
+        self.order_cost = self.quantity * self.product_id.price
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Order Details for {self.order_id.user_id.username} placed on {self.order_id.date_placed}"
