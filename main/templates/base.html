@@ -28,7 +28,11 @@
           href="{%url 'home'%}"
           class="d-inline-flex link-body-emphasis text-decoration-none"
         >
-          <img src="" alt="Overclock-logo" />
+          <img
+            src="{% static 'images\Overclock-logo.png'%}"
+            alt="Overclock-logo"
+            width="150"
+          />
         </a>
       </div>
 
@@ -37,21 +41,28 @@
           <a href="{%url 'home'%}" class="nav-link px-2 link-secondary">Home</a>
         </li>
         <li>
-          <a href="{%url 'signup'%}" class="nav-link px-2 link-secondary"
-            >Sign up</a
-          >
-        </li>
-        <li>
-          <a href="{%url 'login'%}" class="nav-link px-2 link-secondary"
-            >Login</a
-          >
-        </li>
-        <li>
           <a href="{%url 'about'%}" class="nav-link px-2 link-secondary"
             >About</a
           >
         </li>
       </ul>
+
+      <div class="col-md-3 text-end">
+        <a
+          href="{%url 'login'%}"
+          class="btn btn-outline-primary me-2"
+          role="button"
+        >
+          Login
+        </a>
+        <a
+          href="{%url 'signup'%}"
+          class="btn btn-outline-primary me-2"
+          role="button"
+        >
+          Signup
+        </a>
+      </div>
     </header>
     <main class="container">{% block content %} {% endblock %}</main>
 
