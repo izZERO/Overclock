@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 
 # Create your models here.
@@ -32,3 +33,14 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Order(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    total_cost = models.FloatField()
+    shipping_address = models.CharField(max_length=250)
+    status = models.CharField(max_length=250)
+    date_placed = models.DateTimeField(default=datetime.now)
+
+    def __str__(self):
+        return f"Order for {self.user_id.username} placed on {self.date_placed}"
