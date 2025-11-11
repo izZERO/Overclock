@@ -24,26 +24,6 @@ class RegisterForm(UserCreationForm):
             }
         ),
     )
-
-    class Meta:
-        model = User
-        fields = [
-            "username",
-            "email",
-            "password1",
-            "password2",
-        ]
-
-
-class UpdateUserForm(forms.ModelForm):
-    username = forms.CharField(
-        max_length=100,
-        required=True,
-        widget=forms.TextInput(attrs={"class": "form-control"}),
-    )
-    email = forms.EmailField(
-        required=True, widget=forms.TextInput(attrs={"class": "form-control"})
-    )
     password1 = forms.CharField(
         max_length=50,
         required=True,
@@ -67,6 +47,26 @@ class UpdateUserForm(forms.ModelForm):
                 "id": "password",
             }
         ),
+    )
+
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "email",
+            "password1",
+            "password2",
+        ]
+
+
+class UpdateUserForm(forms.ModelForm):
+    username = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+    )
+    email = forms.EmailField(
+        required=True, widget=forms.TextInput(attrs={"class": "form-control"})
     )
 
     class Meta:
