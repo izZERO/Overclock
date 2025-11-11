@@ -45,6 +45,7 @@ class Order(models.Model):
     def __str__(self):
         return f"Order for {self.user_id.username} placed on {self.date_placed}"
 
+
 class Order_Detail(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -57,3 +58,10 @@ class Order_Detail(models.Model):
 
     def __str__(self):
         return f"Order Details for {self.order_id.user_id.username} placed on {self.order_id.date_placed}"
+
+class Wishlist(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    product_id = models.ManyToManyField(Product)
+
+    def __str__(self):
+        return f"{self.user_id.username}'s Wishlist"
