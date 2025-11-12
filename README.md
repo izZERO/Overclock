@@ -8,7 +8,7 @@
 
 ***
 # ***Description***
-E-commerce site for PC-Parts with Inventory management, Analytical Dashboard and Chatbot
+E-commerce site for PC-Parts with Inventory management, Analytical Dashboard and Chatbot. The website is compatible for both computers and mobile phones.
 
 # ***User stories***
 ### As a user, my functional requirements are:
@@ -36,19 +36,15 @@ E-commerce site for PC-Parts with Inventory management, Analytical Dashboard and
 ***
 # ***technologies Used***
 1. HTML5 (Hyper Text Markup Language 5)
-2. CSS (Cascading Style Sheets)
+2. CSS (Cascading Style Sheets), Bootstrap 5
 3. Python (Object Oriented Language), Django Library
 4. PostgreSQL, pgAdmin 4
 
-
-***
 
 # ***Figma Design***
 * [Figma Design Link](https://www.figma.com/design/DeDPWSHeOtM5PKzq4j9nbs/Overclock?node-id=0-1&t=M5wRPPHdDf65ffQ7-1)
 
 ![Design](./Images/Design.png)
-
-***
 
 # ***ERD Design***
 * [ERD Design Link](https://lucid.app/lucidchart/ff3023cd-d98d-48c8-a6a4-d534bf7e0cac/edit?invitationId=inv_bdab7c2e-6a40-45cf-b1d4-c25cc91007be)
