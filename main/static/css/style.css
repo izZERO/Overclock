@@ -12,3 +12,14 @@ footer.page-footer {
   padding-top: 0 !important;
   text-align: right !important;
 }
+
+.image-header {
+  margin-left: 4vh;
+  width: 175px;
+}
+
+.carousel-img {
+  height: 60vh;
+  width: 100%;
+  filter: brightness(50%);
+}
