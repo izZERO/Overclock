@@ -17,3 +17,9 @@ footer.page-footer {
   margin-left: 4vh;
   width: 175px;
 }
+
+.carousel-img {
+  height: 60vh;
+  width: 100%;
+  filter: brightness(50%);
+}
