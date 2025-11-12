@@ -1,0 +1,20 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Products List</h1>
+<div class="container-fluid d-flex flex-wrap gap-2">
+  {% for product in product_list %}
+  <div class="card " style="width: 18rem">
+    {% load static %}
+    <img
+      src="{% static product.image|cut:'main/static/' %}"
+      class="card-img-top"
+      alt="..."
+    />
+    <div class="card-body">
+      <h5 class="card-title">{{product.name}}</h5>
+
+      <a href="#" class="btn btn-primary">Edit</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

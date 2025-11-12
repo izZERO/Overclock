@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
+from .models import Profile, Product, Category, Order, Order_Detail, Wishlist
 from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView
 
 
 # Create your views here.
@@ -51,3 +54,12 @@ def profile(request):
         "user/profile_edit.html",
         {"user_form": user_form, "profile_form": profile_form},
     )
+
+
+# Admin Views
+
+def manage_index(request):
+    return render(request,"admin/index.html")
+
+class ProductList(ListView):
+    model = Product
