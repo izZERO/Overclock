@@ -13,13 +13,16 @@
       <div class="card-body">
         <h5 class="card-title">{{product.name}}</h5>
         <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-tag me-2"></i> {{product.price}} BHD</span
+          ><i class="bi bi-currency-dollar"></i> {{product.price}} BHD</span
         >
         <span class="badge rounded-pill text-bg-primary"
           ><i class="bi bi-suitcase me-2"></i>{{product.weight}} KG</span
         >
         <span class="badge rounded-pill text-bg-primary"
           ><i class="bi bi-calculator me-2"></i>{{product.stock}}</span
+        >
+        <span class="badge rounded-pill text-bg-primary"
+          ><i class="bi bi-tag me-2"></i>{{product.category}}</span
         >
         <p class="card-text mt-5">{{product.description}}</p>
       </div>
