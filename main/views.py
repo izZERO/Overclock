@@ -63,3 +63,6 @@ def manage_index(request):
 
 class ProductList(ListView):
     model = Product
+
+class ProductDetail(DetailView):
+    model = Product
