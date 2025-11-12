@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -124,7 +125,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/landing/"
+LOGOUT_REDIRECT_URL = "/"
 
 
 # Default primary key field type
