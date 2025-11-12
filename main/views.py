@@ -58,11 +58,14 @@ def profile(request):
 
 # Admin Views
 
+
 def manage_index(request):
-    return render(request,"admin/index.html")
+    return render(request, "manage/index.html")
+
 
 class ProductList(ListView):
     model = Product
+
 
 class ProductDetail(DetailView):
     model = Product
