@@ -14,6 +14,13 @@ class Profile(models.Model):
         return self.user.username
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    added_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
@@ -22,18 +29,10 @@ class Product(models.Model):
     price = models.FloatField()
     weight = models.FloatField()
     stock = models.IntegerField()
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=50)
-    added_by = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
-
 
 class Order(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
