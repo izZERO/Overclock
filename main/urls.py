@@ -10,6 +10,19 @@ urlpatterns = [
         views.ProductDetail.as_view(),
         name="products_detail",
     ),
+    path(
+        "manage/products/create/", views.ProductCreate.as_view(), name="products_create"
+    ),
+    path(
+        "manage/products/<int:pk>/update/",
+        views.ProductUpdate.as_view(),
+        name="products_update",
+    ),
+    path(
+        "manage/products/<int:pk>/delete/",
+        views.ProductDelete.as_view(),
+        name="products_delete",
+    ),
     # Signup
     path("accounts/signup/", views.signup, name="signup"),
     path("", views.landing, name="landing"),

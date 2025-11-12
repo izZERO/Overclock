@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth.models import User
 from datetime import datetime
 
@@ -21,10 +22,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
 class Product(models.Model):
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=250, default="")
     image = models.ImageField(upload_to="main/static/uploads", default="")
     price = models.FloatField()
     weight = models.FloatField()
@@ -33,6 +35,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("products_detail", kwargs={"pk": self.id})
+
 
 class Order(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -57,6 +63,7 @@ class Order_Detail(models.Model):
 
     def __str__(self):
         return f"Order Details for {self.order_id.user_id.username} placed on {self.order_id.date_placed}"
+
 
 class Wishlist(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)

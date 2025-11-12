@@ -69,3 +69,42 @@ class ProductList(ListView):
 
 class ProductDetail(DetailView):
     model = Product
+
+
+class ProductCreate(CreateView):
+    model = Product
+    fields = [
+        "name",
+        "description",
+        "image",
+        "price",
+        "weight",
+        "stock",
+        "category",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class ProductUpdate(UpdateView):
+    model = Product
+    fields = [
+        "name",
+        "description",
+        "image",
+        "price",
+        "weight",
+        "stock",
+        "category",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class ProductDelete(DeleteView):
+    model = Product
+    success_url = "/manage/products/"
