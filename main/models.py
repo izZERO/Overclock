@@ -7,6 +7,12 @@ from datetime import datetime
 
 
 # Create your models here.
+STATUSES = (
+    ('c', 'cart'),
+    ('p', 'placed'),
+    ('t', 'transit'),
+    ('d', 'delivered')
+)
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=50, default="user")
@@ -49,7 +55,7 @@ class Order(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     total_cost = models.FloatField()
     shipping_address = models.CharField(max_length=250)
-    status = models.CharField(max_length=250)
+    status = models.CharField(max_length=250, choices=STATUSES, default=STATUSES[0])
     date_placed = models.DateTimeField(default=datetime.now)
 
     def __str__(self):
