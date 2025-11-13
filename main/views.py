@@ -159,12 +159,15 @@ class OrderDetail(DetailView):
 #         return super().form_valid(form)
 
 
-# class OrderUpdate(UpdateView):
-#     model = Order
-#     fields = ["quantity"]
+def update_status(request, order_id, status):
+    order = Order.objects.get(id=order_id)
+    order.status = status
+    order.save()
+
 
 # class OrderDelete(DeleteView):
 #     model = Order
+
 
 def wishlist_index(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
@@ -172,6 +175,7 @@ def wishlist_index(request):
     products = wishlist.products.all()
 
     return render(request, "wishlist.html", {"products": products})
+
 
 def assoc_product(request, wishlist_id, product_id):
     Wishlist.objects.get(id=wishlist_id).products.add(product_id)

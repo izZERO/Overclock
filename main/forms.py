@@ -85,3 +85,6 @@ class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ["address", "phone"]
+
+class UpdateStatus(forms.Form):
+    status_dropdown = forms.ChoiceField( choices=[])
