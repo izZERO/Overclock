@@ -3,7 +3,7 @@
   <div class="row g-0">
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title">{{order.id}}</h5>
+        <h5 class="card-title">Order ID: {{order.id}}</h5>
         <span class="badge rounded-pill text-bg-primary"
           ><i class="bi bi-people-dollar"></i> placed by:
           {{order.user_id.username}}</span
@@ -52,13 +52,11 @@
                 ></button>
               </div>
               <div class="modal-body">
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <select name="{{order.status}}" id="">
-                    {for status in order.status}
-                    <option value="{{status}}">{{status}}</option>
-                    {endfor}
-                  </select>
+                <form method="POST">
+                  {% csrf_token %} {{ form.as_p }}
+                  <button value="submit" name="Submit" type="submit">
+                    Submit
+                  </button>
                 </form>
               </div>
               <div class="modal-footer">
@@ -80,4 +78,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}

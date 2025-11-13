@@ -5,12 +5,9 @@ from datetime import datetime
 
 
 # Create your models here.
-STATUSES = (
-    ('c', 'cart'),
-    ('p', 'placed'),
-    ('t', 'transit'),
-    ('d', 'delivered')
-)
+STATUSES = (("c", "cart"), ("p", "placed"), ("t", "transit"), ("d", "delivered"))
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=50, default="user")
@@ -58,6 +55,9 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order for {self.user_id.username} placed on {self.date_placed}"
+
+    def get_absolute_url(self):
+        return reverse("order_detail", kwargs={"order_id": self.id})
 
     class Meta:
         ordering = ["-date_placed"]

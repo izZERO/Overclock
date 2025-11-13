@@ -51,15 +51,15 @@ urlpatterns = [
     # Order
     path("manage/orders/", views.OrderList.as_view(), name="orders_index"),
     path(
-        "manage/orders/<int:pk>/",
-        views.OrderDetail.as_view(),
+        "manage/orders/<int:order_id>/",
+        views.order_detail,
         name="orders_detail",
     ),
-    path(
-        "manage/orders/<int:order_id>/update/",
-        views.update_status,
-        name="orders_update",
-    ),
+    # path(
+    #     "manage/orders/<int:order_id>/update/",
+    #     views.update_status,
+    #     name="orders_update",
+    # ),
     # Wishlist
     path("wishlist/", views.wishlist_index, name="wishlist_index"),
     path(
