@@ -1,0 +1,25 @@
+{% extends 'manage_base.html' %} {% block content %}
+<div class="card mb-3 container-fluid">
+  <div class="row g-0">
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{order.id}}</h5>
+        <span class="badge rounded-pill text-bg-primary"
+          ><i class="bi bi-people-dollar"></i> placed by:
+          {{order.user_id.username}}</span
+        >
+        <span class="badge rounded-pill text-bg-primary"
+          ><i class="bi bi-suitcase me-2"></i>{{order.total_cost}} KG</span
+        >
+        <span class="badge rounded-pill text-bg-primary"
+          ><i class="bi bi-calculator me-2"></i>{{order.shipping_address}}</span
+        >
+        <span class="badge rounded-pill text-bg-primary"
+          ><i class="bi bi-tag me-2"></i>{{order.date_placed}}</span
+        >
+        <p class="card-text mt-5">Status: {{order.status}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

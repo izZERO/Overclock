@@ -28,6 +28,9 @@
       crossorigin="anonymous"
     ></script>
     <style>
+      i {
+        font-size: large;
+      }
       .bd-placeholder-img {
         font-size: 1.625rem;
         text-anchor: middle;
@@ -145,17 +148,17 @@
               class="nav-link link-body-emphasis"
               style="font-size: large"
             >
-              <i class="bi bi-speedometer2 me-2" style="font-size: large"> </i>
+              <i class="bi bi-speedometer2 me-2"> </i>
               Dashboard
             </a>
           </li>
           <li>
             <a
-              href="#"
+              href="{% url 'orders_index' %}"
               class="nav-link link-body-emphasis"
               style="font-size: large"
             >
-              <i class="bi bi-airplane me-2" style="font-size: large"> </i>
+              <i class="bi bi-airplane me-2"> </i>
               Orders
             </a>
           </li>
@@ -165,13 +168,17 @@
               class="nav-link link-body-emphasis"
               style="font-size: large"
             >
-              <i class="bi bi-box-seam me-2" style="font-size: large"> </i>
+              <i class="bi bi-box-seam me-2""> </i>
               Products
             </a>
           </li>
           <li>
-            <a href="{% url 'categories_index' %}" class="nav-link link-body-emphasis">
-              <i class="bi bi-tag me-2" style="font-size: large"> </i>
+            <a
+              href="{% url 'categories_index' %}"
+              class="nav-link link-body-emphasis"
+              style="font-size: large"
+            >
+              <i class="bi bi-tag me-2"> </i>
               Categories
             </a>
           </li>

@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from datetime import datetime
 
+# STATUS = (("", "Fruits"), ("V", "Vegetables"), ("S", "Seeds"))
+
 
 # Create your models here.
 class Profile(models.Model):
@@ -52,6 +54,9 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order for {self.user_id.username} placed on {self.date_placed}"
+
+    class Meta:
+        ordering = ["-date_placed"]
 
 
 class Order_Detail(models.Model):

@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     # Admin
     path("manage/", views.manage_index, name="manage"),
+    # Admin Products
     path("manage/products/", views.ProductList.as_view(), name="products_index"),
     path(
         "manage/products/<int:pk>/",
@@ -23,9 +24,12 @@ urlpatterns = [
         views.ProductDelete.as_view(),
         name="products_delete",
     ),
+    # Admin categories
     path("manage/categories/", views.CategoryList.as_view(), name="categories_index"),
     path(
-        "manage/categories/create/", views.CategoryCreate.as_view(), name="categories_create"
+        "manage/categories/create/",
+        views.CategoryCreate.as_view(),
+        name="categories_create",
     ),
     path(
         "manage/categories/<int:pk>/update/",
@@ -40,14 +44,24 @@ urlpatterns = [
     # Signup
     path("accounts/signup/", views.signup, name="signup"),
     path("", views.landing, name="landing"),
-    path("home/", views.home, name="home"),
+    path("browse/", views.browse, name="browse"),
     path("about/", views.about, name="about"),
     # Profile
     path("profile/edit", views.profile, name="profile-edit"),
+
+    # Order
+    path("manage/orders/", views.OrderList.as_view(), name="orders_index"),
+    path(
+        "manage/orders/<int:pk>/",
+        views.OrderDetail.as_view(),
+        name="orders_detail",
+    ),
+
 
 
     # Wishlist
     path("wishlist/", views.wishlist_index, name="wishlist_index"),
     path('wishlist/<int:wishlist_id>/assoc_product/<int:product_id>', views.assoc_product, name='assoc_product'),
     path('wishlist/<int:wishlist_id>/unassoc_product/<int:product_id>', views.unassoc_product, name='unassoc_product'),
+
 ]
