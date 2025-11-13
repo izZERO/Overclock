@@ -1,0 +1,13 @@
+{% extends 'manage_base.html' %} {% block content %}
+<div style="display: flex; justify-content: space-between">
+  <h1>Orders List</h1>
+</div>
+{% for order in order_list %}
+<div class="card" style="width: 18rem">
+  <div class="card-body">
+    <a href="{%url 'orders_detail' order.id %}">
+      <h5 class="card-title">Order id: {{order.id}}</h5>
+    </a>
+  </div>
+</div>
+{% endfor %} {% endblock %}

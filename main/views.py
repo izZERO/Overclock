@@ -15,8 +15,8 @@ def landing(request):
     return render(request, "landing.html")
 
 
-def home(request):
-    return render(request, "home.html")
+def browse(request):
+    return render(request, "browse.html")
 
 
 def about(request):
@@ -140,3 +140,28 @@ class CategoryUpdate(UpdateView):
 class CategoryDelete(DeleteView):
     model = Category
     success_url = "/manage/categories/"
+
+
+class OrderList(ListView):
+    model = Order
+
+
+class OrderDetail(DetailView):
+    model = Order
+
+
+# class OrderAdd(CreateView):
+#     model = Order
+#     fields = ["name"]
+
+#     def form_valid(self, form):
+#         form.instance.user_id = self.request.user
+#         return super().form_valid(form)
+
+
+# class OrderUpdate(UpdateView):
+#     model = Order_Detail
+#     fields = ["quantity"]
+
+# class OrderDelete(DeleteView):
+#     model = Order
