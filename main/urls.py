@@ -23,6 +23,20 @@ urlpatterns = [
         views.ProductDelete.as_view(),
         name="products_delete",
     ),
+    path("manage/categories/", views.CategoryList.as_view(), name="categories_index"),
+    path(
+        "manage/categories/create/", views.CategoryCreate.as_view(), name="categories_create"
+    ),
+    path(
+        "manage/categories/<int:pk>/update/",
+        views.CategoryUpdate.as_view(),
+        name="categories_update",
+    ),
+    path(
+        "manage/categories/<int:pk>/delete/",
+        views.CategoryDelete.as_view(),
+        name="categories_delete",
+    ),
     # Signup
     path("accounts/signup/", views.signup, name="signup"),
     path("", views.landing, name="landing"),

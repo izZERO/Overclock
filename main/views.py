@@ -108,3 +108,32 @@ class ProductUpdate(UpdateView):
 class ProductDelete(DeleteView):
     model = Product
     success_url = "/manage/products/"
+
+
+class CategoryList(ListView):
+    model = Category
+
+
+class CategoryCreate(CreateView):
+    model = Category
+    fields = ["name"]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class CategoryUpdate(UpdateView):
+    model = Category
+    fields = [
+        "name",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class CategoryDelete(DeleteView):
+    model = Category
+    success_url = "/manage/categories/"

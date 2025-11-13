@@ -1,0 +1,22 @@
+{% extends 'manage_base.html' %}
+{% block content %}
+<div style="display: flex; justify-content: space-between">
+  <h1>Categories List</h1>
+  <a
+    href="{%url 'categories_create' %}"
+    class="btn btn-primary me-2 mt-2"
+    role="button"
+  >
+    Add Category
+  </a>
+</div>
+  {% for category in category_list %}
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">{{category.name}}</h5>
+        <a href="{%url 'categories_update' category.id %}" class="card-link btn btn-primary" role="button">Edit</a>
+        <a href="{%url 'categories_delete' category.id %}" class="card-link btn btn-danger" role="button">Remove</a>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
