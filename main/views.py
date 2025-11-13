@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import Profile, Product, Category, Order, Order_Detail, Wishlist
 from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm
+from django.views import View
+from django.contrib import messages
 from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView

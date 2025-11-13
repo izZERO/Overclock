@@ -25,7 +25,9 @@ urlpatterns = [
     ),
     path("manage/categories/", views.CategoryList.as_view(), name="categories_index"),
     path(
-        "manage/categories/create/", views.CategoryCreate.as_view(), name="categories_create"
+        "manage/categories/create/",
+        views.CategoryCreate.as_view(),
+        name="categories_create",
     ),
     path(
         "manage/categories/<int:pk>/update/",
