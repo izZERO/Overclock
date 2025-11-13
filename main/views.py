@@ -137,3 +137,19 @@ class CategoryUpdate(UpdateView):
 class CategoryDelete(DeleteView):
     model = Category
     success_url = "/manage/categories/"
+
+def wishlist_index(request):
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+
+    products = wishlist.products.all()
+
+    return render(request, "wishlist.html", {"products": products})
+
+def assoc_product(request, wishlist_id, product_id):
+    Wishlist.objects.get(id=wishlist_id).products.add(product_id)
+    return redirect("detail", wishlist_id=wishlist_id)
+
+
+def unassoc_product(request, wishlist_id, product_id):
+    Wishlist.objects.get(id=wishlist_id).products.remove(product_id)
+    return redirect("detail", wishlist_id=wishlist_id)

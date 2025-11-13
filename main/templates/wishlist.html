@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>My Wishlist</h1>
+
+  {% if products %}
+    {% for product in products %}
+      <h2>{{ product.name }}</h2>
+      <p>${{ product.price }}</p>
+    {% endfor %}
+  {% else %}
+    <h5>No Products :(</h5>
+  {% endif %}
+{% endblock %}

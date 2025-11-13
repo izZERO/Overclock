@@ -44,4 +44,10 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     # Profile
     path("profile/edit", views.profile, name="profile-edit"),
+
+
+    # Wishlist
+    path("wishlist/", views.wishlist_index, name="wishlist_index"),
+    path('wishlist/<int:wishlist_id>/assoc_product/<int:product_id>', views.assoc_product, name='assoc_product'),
+    path('wishlist/<int:wishlist_id>/unassoc_product/<int:product_id>', views.unassoc_product, name='unassoc_product'),
 ]
