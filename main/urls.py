@@ -48,6 +48,7 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     # Profile
     path("profile/edit", views.profile, name="profile-edit"),
+
     # Order
     path("manage/orders/", views.OrderList.as_view(), name="orders_index"),
     path(
@@ -55,4 +56,12 @@ urlpatterns = [
         views.OrderDetail.as_view(),
         name="orders_detail",
     ),
+
+
+
+    # Wishlist
+    path("wishlist/", views.wishlist_index, name="wishlist_index"),
+    path('wishlist/<int:wishlist_id>/assoc_product/<int:product_id>', views.assoc_product, name='assoc_product'),
+    path('wishlist/<int:wishlist_id>/unassoc_product/<int:product_id>', views.unassoc_product, name='unassoc_product'),
+
 ]

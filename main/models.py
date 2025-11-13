@@ -74,8 +74,8 @@ class Order_Detail(models.Model):
 
 
 class Wishlist(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    product_id = models.ManyToManyField(Product)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    products = models.ManyToManyField(Product)
 
     def __str__(self):
-        return f"{self.user_id.username}'s Wishlist"
+        return f"{self.user.username}'s Wishlist"
