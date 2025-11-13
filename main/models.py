@@ -22,6 +22,9 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("categories_index")
+
 
 class Product(models.Model):
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
