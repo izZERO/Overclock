@@ -3,23 +3,81 @@
   <div class="row g-0">
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title">{{order.id}}</h5>
+        <h5 class="card-title">Order ID: {{order.id}}</h5>
         <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-people-dollar"></i> placed by:
+          ><i class="bi bi-person-circle me-2"></i> placed by:
           {{order.user_id.username}}</span
         >
         <span class="badge rounded-pill text-bg-primary"
           ><i class="bi bi-suitcase me-2"></i>{{order.total_cost}} KG</span
         >
         <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-calculator me-2"></i>{{order.shipping_address}}</span
+          ><i class="bi bi-house-fill me-2"></i>{{order.shipping_address}}</span
         >
         <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-tag me-2"></i>{{order.date_placed}}</span
+          ><i class="bi bi-calendar-date-fill me-2"></i
+          >{{order.date_placed}}</span
         >
-        <p class="card-text mt-5">Status: {{order.status}}</p>
+
+        <p class="card-text mt-5">Status: {{order.get_status_display}}</p>
+
+        <!-- Button trigger modal -->
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          Update Status
+        </button>
+
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="exampleModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                  Update Status
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form method="POST">
+                  {% csrf_token %} {{ form.as_p }}
+                  <button value="submit" name="Submit" type="submit">
+                    Submit
+                  </button>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="button" class="btn btn-primary">
+                  Save changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Order
 from django.contrib.auth.forms import UserCreationForm
+from .models import STATUSES
 
 
 class RegisterForm(UserCreationForm):
@@ -85,3 +86,7 @@ class UpdateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ["address", "phone"]
+
+
+class UpdateStatus(forms.Form):
+    status_dropdown = forms.ChoiceField(choices=STATUSES, label="Select an option")

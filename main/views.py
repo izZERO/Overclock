@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Profile, Product, Category, Order, Order_Detail, Wishlist
-from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm
+from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm, UpdateStatus
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth import login
@@ -146,25 +146,39 @@ class OrderList(ListView):
     model = Order
 
 
-class OrderDetail(DetailView):
-    model = Order
+def order_detail(request, order_id):
+    order = Order.objects.get(id=order_id)
+
+    if request.method == "POST":
+        form = UpdateStatus(request.POST)
+        if form.is_valid():
+            selected_status = form.cleaned_data["status_dropdown"]
+            order.status = selected_status
+            order.save()
+            return redirect("orders_detail", order_id=order.id)
+    else:
+        form = UpdateStatus(initial={"status_dropdown": order.status})
+    return render(
+        request,
+        "main/order_detail.html",
+        {
+            "order": order,
+            "form": form,
+        },
+    )
 
 
-# class OrderAdd(CreateView):
-#     model = Order
-#     fields = ["name"]
+# def update_status(request, order_id):
+#     print("here")
+#     if request.method == "POST":
+#         form = UpdateStatus(request.POST)
+#         if form.is_valid():
+#             selected_value = form.cleaned_data["status_dropdown"]
+#             return render(request, "order_details.html", {"status": selected_value})
+#     else:
+#         form = UpdateStatus()
+#     return render(request, "order_detail.html", {"form": form})
 
-#     def form_valid(self, form):
-#         form.instance.user_id = self.request.user
-#         return super().form_valid(form)
-
-
-# class OrderUpdate(UpdateView):
-#     model = Order
-#     fields = ["quantity"]
-
-# class OrderDelete(DeleteView):
-#     model = Order
 
 def wishlist_index(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
@@ -172,6 +186,7 @@ def wishlist_index(request):
     products = wishlist.products.all()
 
     return render(request, "wishlist.html", {"products": products})
+
 
 def assoc_product(request, wishlist_id, product_id):
     Wishlist.objects.get(id=wishlist_id).products.add(product_id)
