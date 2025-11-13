@@ -50,7 +50,7 @@ urlpatterns = [
     path("profile/edit", views.profile, name="profile-edit"),
     # Order
     path("manage/orders/", views.OrderList.as_view(), name="orders_index"),
-       path(
+    path(
         "manage/orders/<int:pk>/",
         views.OrderDetail.as_view(),
         name="orders_detail",

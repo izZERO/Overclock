@@ -55,6 +55,9 @@ class Order(models.Model):
     def __str__(self):
         return f"Order for {self.user_id.username} placed on {self.date_placed}"
 
+    class Meta:
+        ordering = ["-date_placed"]
+
 
 class Order_Detail(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)

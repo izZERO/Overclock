@@ -160,7 +160,7 @@ class OrderDetail(DetailView):
 
 
 # class OrderUpdate(UpdateView):
-#     model = Order_Detail
+#     model = Order
 #     fields = ["quantity"]
 
 # class OrderDelete(DeleteView):

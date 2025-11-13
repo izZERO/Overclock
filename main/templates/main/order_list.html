@@ -3,10 +3,12 @@
   <h1>Orders List</h1>
 </div>
 {% for order in order_list %}
-<div class="card" style="width: 18rem">
+<div class="card" style="width: 58rem">
   <div class="card-body">
     <a href="{%url 'orders_detail' order.id %}">
-      <h5 class="card-title">Order id: {{order.id}}</h5>
+      <h5 class="card-title">
+        Order id: {{order.id}} - Placed by {{order.user_id.username }}
+      </h5>
     </a>
   </div>
 </div>
