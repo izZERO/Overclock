@@ -5,20 +5,21 @@
       <div class="card-body">
         <h5 class="card-title">Order ID: {{order.id}}</h5>
         <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-people-dollar"></i> placed by:
+          ><i class="bi bi-person-circle me-2"></i> placed by:
           {{order.user_id.username}}</span
         >
         <span class="badge rounded-pill text-bg-primary"
           ><i class="bi bi-suitcase me-2"></i>{{order.total_cost}} KG</span
         >
         <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-calculator me-2"></i>{{order.shipping_address}}</span
+          ><i class="bi bi-house-fill me-2"></i>{{order.shipping_address}}</span
         >
         <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-tag me-2"></i>{{order.date_placed}}</span
+          ><i class="bi bi-calendar-date-fill me-2"></i
+          >{{order.date_placed}}</span
         >
 
-        <p class="card-text mt-5">Status: {{order.status}}</p>
+        <p class="card-text mt-5">Status: {{order.get_status_display}}</p>
 
         <!-- Button trigger modal -->
         <button
