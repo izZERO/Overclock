@@ -31,6 +31,23 @@ def browse_category(request, category_id):
     )
 
 
+def customer_product_detail(request, product_id):
+    product = Product.objects.get(id=product_id)
+
+    wishlist = None
+    if request.user.is_authenticated:
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+
+    return render(
+        request,
+        "customer_product_detail.html",
+        {
+            "product": product,
+            "wishlist": wishlist,
+        },
+    )
+
+
 def about(request):
     return render(request, "about.html")
 
@@ -194,17 +211,25 @@ def order_detail(request, order_id):
 
 def wishlist_index(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-
     products = wishlist.products.all()
 
-    return render(request, "wishlist.html", {"products": products})
+    return render(
+        request,
+        "wishlist.html",
+        {
+            "products": products,
+            "wishlist": wishlist,
+        },
+    )
 
 
 def assoc_product(request, wishlist_id, product_id):
-    Wishlist.objects.get(id=wishlist_id).products.add(product_id)
-    return redirect("detail", wishlist_id=wishlist_id)
+    wishlist = Wishlist.objects.get(id=wishlist_id, user=request.user)
+    wishlist.products.add(product_id)
+    return redirect("wishlist_index")
 
 
 def unassoc_product(request, wishlist_id, product_id):
-    Wishlist.objects.get(id=wishlist_id).products.remove(product_id)
-    return redirect("detail", wishlist_id=wishlist_id)
+    wishlist = Wishlist.objects.get(id=wishlist_id, user=request.user)
+    wishlist.products.remove(product_id)
+    return redirect("wishlist_index")

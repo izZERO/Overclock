@@ -74,4 +74,9 @@ urlpatterns = [
     # Browse
     path("browse/", views.browse, name="browse"),
     path("browse/<int:category_id>/", views.browse_category, name="browse_category"),
+    path(
+        "product/<int:product_id>/",
+        views.customer_product_detail,
+        name="customer_product_detail",
+    ),
 ]
