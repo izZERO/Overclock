@@ -17,7 +17,19 @@ def landing(request):
 
 
 def browse(request):
-    return render(request, "browse.html")
+    categories = Category.objects.all()
+    products = Product.objects.all()
+    return render(
+        request, "browse.html", {"categories": categories, "products": products}
+    )
+
+
+def browse_category(request, category_id):
+    category = Category.objects.get(id=category_id)
+    products = Product.objects.filter(category=category)
+    return render(
+        request, "browse_category.html", {"category": category, "products": products}
+    )
 
 
 def about(request):
