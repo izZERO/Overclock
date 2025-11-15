@@ -117,7 +117,7 @@
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
       <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Orders</h5>
       {% if total_orders > 0 %}
-      <a href="#" class="btn btn-sm btn-outline-primary">View All Orders</a>
+      <a href="{% url 'customer_orders' %}" class="btn btn-sm btn-outline-primary">View All Orders</a>
       {% endif %}
     </div>
     <div class="card-body">
