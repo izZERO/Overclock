@@ -218,6 +218,7 @@ class OrderList(ListView):
 
 def order_detail(request, order_id):
     order = Order.objects.get(id=order_id)
+    items = Order_Detail.objects.filter(order_id=order)
 
     if request.method == "POST":
         form = UpdateStatus(request.POST)
@@ -234,6 +235,7 @@ def order_detail(request, order_id):
         {
             "order": order,
             "form": form,
+            "items": items,
         },
     )
 
@@ -460,3 +462,17 @@ def customer_orders(request):
     }
 
     return render(request, "orders.html", {"orders": orders})
+
+
+def customer_order_detail(request, order_id):
+    order = Order.objects.get(id=order_id, user_id=request.user)
+    items = Order_Detail.objects.filter(order_id=order)
+
+    return render(
+        request,
+        "customer_order_detail.html",
+        {
+            "order": order,
+            "items": items,
+        },
+    )
