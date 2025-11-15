@@ -3,7 +3,6 @@
 
 {% block content %}
 <div class="container py-4">
-  <!-- Page Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
       <h1 class="mb-1">
@@ -17,18 +16,17 @@
   </div>
 
   {% if orders %}
-  <!-- Orders Count -->
+
   <div class="alert alert-info mb-4">
     <i class="bi bi-info-circle me-2"></i>
     You have <strong>{{ orders.count }}</strong> order in total
   </div>
 
-  <!-- Orders List -->
+
   <div class="row">
     {% for order in orders %}
     <div class="col-12 mb-4">
       <div class="card shadow-sm">
-        <!-- Order Header -->
         <div class="card-header bg-light">
           <div class="row align-items-center">
             <div class="col-md-3">
@@ -68,8 +66,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Order Body -->
         <div class="card-body">
           <div class="row">
             <div class="col-md-8">
@@ -79,7 +75,6 @@
               <p class="mb-0">{{ order.shipping_address }}</p>
             </div>
             <div class="col-md-4 text-end">
-              <!-- Order Actions -->
               <a href="#" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-eye me-1"></i>View Details
               </a>
@@ -92,7 +87,7 @@
   </div>
 
   {% else %}
-  <!-- Empty State -->
+
   <div class="card shadow-sm">
     <div class="card-body text-center py-5">
       <i class="bi bi-cart-x text-muted" style="font-size: 5rem;"></i>
