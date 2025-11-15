@@ -144,8 +144,8 @@
         <ul class="nav nav-pills flex-column mb-auto">
           <li>
             <a
-              href="#"
-              class="nav-link link-body-emphasis"
+              href="{% url 'manage' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'manage' %}active{% else %}link-body-emphasis{% endif %}"
               style="font-size: large"
             >
               <i class="bi bi-speedometer2 me-2"> </i>
@@ -155,7 +155,7 @@
           <li>
             <a
               href="{% url 'orders_index' %}"
-              class="nav-link link-body-emphasis"
+              class="nav-link {% if 'orders' in request.resolver_match.url_name %}active{% else %}link-body-emphasis{% endif %}"
               style="font-size: large"
             >
               <i class="bi bi-airplane me-2"> </i>
@@ -165,17 +165,17 @@
           <li>
             <a
               href="{% url 'products_index' %}"
-              class="nav-link link-body-emphasis"
+              class="nav-link {% if 'products' in request.resolver_match.url_name %}active{% else %}link-body-emphasis{% endif %}"
               style="font-size: large"
             >
-              <i class="bi bi-box-seam me-2""> </i>
+              <i class="bi bi-box-seam me-2"> </i>
               Products
             </a>
           </li>
           <li>
             <a
               href="{% url 'categories_index' %}"
-              class="nav-link link-body-emphasis"
+              class="nav-link {% if 'categories' in request.resolver_match.url_name %}active{% else %}link-body-emphasis{% endif %}"
               style="font-size: large"
             >
               <i class="bi bi-tag me-2"> </i>
@@ -206,17 +206,20 @@
             <li><a class="dropdown-item" href="#">Profile</a></li>
             <li><hr class="dropdown-divider" /></li> -->
             <li>
+              <a
+                href="/accounts/password_change"
+                class="dropdown-item"
+                role="button"
+                >Change Password</a
+              >
+            </li>
+            <li>
               <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
                 <button
+                  class="dropdown-item"
                   type="submit"
-                  style="
-                    display: block;
-                    border: none;
-                    text-align: center;
-                    background-color: white;
-                    margin: 0 auto;
-                  "
+                  style="text-align: center"
                 >
                   Logout
                 </button>
