@@ -4,6 +4,13 @@ from . import views
 urlpatterns = [
     # Admin
     path("manage/", views.manage_index, name="manage"),
+    # Admin Orders
+    path("manage/orders/", views.OrderList.as_view(), name="orders_index"),
+    path(
+        "manage/orders/<int:order_id>/",
+        views.order_detail,
+        name="orders_detail",
+    ),
     # Admin Products
     path("manage/products/", views.ProductList.as_view(), name="products_index"),
     path(
@@ -45,21 +52,14 @@ urlpatterns = [
     path("accounts/signup/", views.signup, name="signup"),
     path("", views.landing, name="landing"),
     path("about/", views.about, name="about"),
-    # Profile
+
+
+    
+    # Customer Pages
     path("profile/", views.profile_view, name="profile-view"),
     path("profile/edit", views.profile, name="profile-edit"),
     # Order
-    path("manage/orders/", views.OrderList.as_view(), name="orders_index"),
-    path(
-        "manage/orders/<int:order_id>/",
-        views.order_detail,
-        name="orders_detail",
-    ),
-    # path(
-    #     "manage/orders/<int:order_id>/update/",
-    #     views.update_status,
-    #     name="orders_update",
-    # ),
+    path("orders/", views.customer_orders, name="customer_orders"),
     # Wishlist
     path("wishlist/", views.wishlist_index, name="wishlist_index"),
     path(

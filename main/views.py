@@ -89,7 +89,6 @@ def profile(request):
     )
 
 
-@login_required
 def profile_view(request):
     recent_orders = Order.objects.filter(user_id=request.user).order_by("-date_placed")[
         :5
@@ -103,7 +102,7 @@ def profile_view(request):
     )
 
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
-    wishlist_items = wishlist.products.all()[:4] 
+    wishlist_items = wishlist.products.all()[:4]
     wishlist_count = wishlist.products.count()
 
     context = {
@@ -251,6 +250,7 @@ def order_detail(request, order_id):
 #     return render(request, "order_detail.html", {"form": form})
 
 
+#  User Views
 def wishlist_index(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     products = wishlist.products.all()
@@ -275,3 +275,13 @@ def unassoc_product(request, wishlist_id, product_id):
     wishlist = Wishlist.objects.get(id=wishlist_id, user=request.user)
     wishlist.products.remove(product_id)
     return redirect("wishlist_index")
+
+
+def customer_orders(request):
+    orders = Order.objects.filter(user_id=request.user).order_by("-date_placed")
+
+    context = {
+        "orders": orders,
+    }
+
+    return render(request, "orders.html", {"orders": orders})
