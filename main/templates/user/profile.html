@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Profile Header -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+               style="width: 80px; height: 80px;">
+            <i class="bi bi-person-fill text-white" style="font-size: 3rem;"></i>
+          </div>
+          <div>
+            <h2 class="mb-1">{{ user.username }}</h2>
+            <p class="text-muted mb-0">
+              <i class="bi bi-envelope me-2"></i>{{ user.email }}
+            </p>
+            <p class="text-muted mb-0">
+              <i class="bi bi-calendar me-2"></i>Member since {{ user.date_joined|date:"F Y" }}
+            </p>
+          </div>
+        </div>
+        <div>
+          <a href="{% url 'profile-edit' %}" class="btn btn-primary">
+            <i class="bi bi-pencil-square me-2"></i>Edit Profile
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Cards Row -->
+  <div class="row mb-4">
+    <!-- Personal Information Card -->
+    <div class="col-md-6 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Personal Information</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="text-muted small">Username</label>
+            <p class="mb-2"><strong>{{ user.username }}</strong></p>
+          </div>
+          <div class="mb-3">
+            <label class="text-muted small">Email</label>
+            <p class="mb-2"><strong>{{ user.email }}</strong></p>
+          </div>
+          <div class="mb-3">
+            <label class="text-muted small">Phone</label>
+            <p class="mb-2"><strong>{{ user.profile.phone|default:"Not provided" }}</strong></p>
+          </div>
+          <div class="mb-3">
+            <label class="text-muted small">Shipping Address</label>
+            <p class="mb-2"><strong>{{ user.profile.address|default:"Not provided" }}</strong></p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="{% url 'profile-edit' %}" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-pencil me-1"></i>Edit Information
+            </a>
+            <a href="/accounts/password_change" class="btn btn-sm btn-outline-secondary">
+              <i class="bi bi-key me-1"></i>Change Password
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Statistics Card -->
+    <div class="col-md-6 mb-3">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Account Statistics</h5>
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-4">
+              <div class="p-3 border rounded">
+                <i class="bi bi-bag-check text-primary" style="font-size: 2rem;"></i>
+                <h3 class="mt-2 mb-0">{{ total_orders }}</h3>
+                <p class="text-muted small mb-0">Total Orders</p>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 border rounded">
+                <i class="bi bi-bookmark-heart text-danger" style="font-size: 2rem;"></i>
+                <h3 class="mt-2 mb-0">{{ wishlist_count }}</h3>
+                <p class="text-muted small mb-0">Wishlist Items</p>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="p-3 border rounded">
+                <i class="bi bi-currency-dollar text-success" style="font-size: 2rem;"></i>
+                <h3 class="mt-2 mb-0">{{ total_spent|floatformat:2 }}</h3>
+                <p class="text-muted small mb-0">Total Spent (BHD)</p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-3">
+
+          <div class="text-center">
+            <p class="text-muted mb-2">Account Status</p>
+            <span class="badge bg-success rounded-pill px-3 py-2">
+              <i class="bi bi-check-circle me-1"></i>Active {{user.profile.role|capfirst}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Orders -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Orders</h5>
+      {% if total_orders > 0 %}
+      <a href="{% url 'customer_orders' %}" class="btn btn-sm btn-outline-primary">View All Orders</a>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      {% if recent_orders %}
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in recent_orders %}
+            <tr>
+              <td><strong>#{{ order.id }}</strong></td>
+              <td>{{ order.date_placed|date:"M d, Y" }}</td>
+              <td><strong>{{ order.total_cost }} BHD</strong></td>
+              <td>
+                {% if order.status == 'c' %}
+                <span class="badge bg-secondary">Cart</span>
+                {% elif order.status == 'p' %}
+                <span class="badge bg-info">Placed</span>
+                {% elif order.status == 't' %}
+                <span class="badge bg-warning">In Transit</span>
+                {% elif order.status == 'd' %}
+                <span class="badge bg-success">Delivered</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="#" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-eye me-1"></i>View Details
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-5">
+        <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+        <p class="text-muted mt-3">No orders yet</p>
+        <a href="{% url 'browse' %}" class="btn btn-primary">
+          <i class="bi bi-shop me-2"></i>Start Shopping
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Wishlist Preview -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0"><i class="bi bi-heart me-2"></i>Wishlist Preview</h5>
+      {% if wishlist_count > 0 %}
+      <a href="{% url 'wishlist_index' %}" class="btn btn-sm btn-outline-danger">
+        View Full Wishlist ({{ wishlist_count }})
+      </a>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      {% if wishlist_items %}
+      <div class="row">
+        {% for product in wishlist_items %}
+        <div class="col-md-3 col-sm-6 mb-3">
+          <div class="card h-100">
+            <img
+              src="{% static product.image|cut:'main/static/' %}"
+              class="card-img-top"
+              alt="{{ product.name }}"
+              style="height: 200px; object-fit: cover;"
+            />
+            <div class="card-body">
+              <h6 class="card-title">{{ product.name }}</h6>
+              <p class="text-primary mb-0">
+                <strong>{{ product.price }} BHD</strong>
+              </p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-5">
+        <i class="bi bi-heart text-muted" style="font-size: 4rem;"></i>
+        <p class="text-muted mt-3">Your wishlist is empty</p>
+        <a href="{% url 'browse' %}" class="btn btn-outline-danger">
+          <i class="bi bi-heart me-2"></i>Add Items to Wishlist
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

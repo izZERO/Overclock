@@ -89,6 +89,33 @@ def profile(request):
     )
 
 
+def profile_view(request):
+    recent_orders = Order.objects.filter(user_id=request.user).order_by("-date_placed")[
+        :5
+    ]
+
+    total_orders = Order.objects.filter(user_id=request.user).count()
+
+    # Generator expression, its like list comprehension but more memory effective in this usecase
+    total_spent = sum(
+        order.total_cost for order in Order.objects.filter(user_id=request.user)
+    )
+
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    wishlist_items = wishlist.products.all()[:4]
+    wishlist_count = wishlist.products.count()
+
+    context = {
+        "recent_orders": recent_orders,
+        "total_orders": total_orders,
+        "total_spent": total_spent,
+        "wishlist_items": wishlist_items,
+        "wishlist_count": wishlist_count,
+    }
+
+    return render(request, "user/profile.html", context)
+
+
 # Admin Views
 
 
@@ -211,6 +238,7 @@ def order_detail(request, order_id):
     )
 
 
+#  User Views
 def wishlist_index(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     products = wishlist.products.all()
@@ -310,3 +338,13 @@ def add_to_cart(request, product_id):
     cart.save()
 
     return redirect("cart_view")
+
+
+def customer_orders(request):
+    orders = Order.objects.filter(user_id=request.user).order_by("-date_placed")
+
+    context = {
+        "orders": orders,
+    }
+
+    return render(request, "orders.html", {"orders": orders})
