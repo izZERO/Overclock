@@ -238,18 +238,6 @@ def order_detail(request, order_id):
     )
 
 
-# def update_status(request, order_id):
-#     print("here")
-#     if request.method == "POST":
-#         form = UpdateStatus(request.POST)
-#         if form.is_valid():
-#             selected_value = form.cleaned_data["status_dropdown"]
-#             return render(request, "order_details.html", {"status": selected_value})
-#     else:
-#         form = UpdateStatus()
-#     return render(request, "order_detail.html", {"form": form})
-
-
 #  User Views
 def wishlist_index(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
@@ -275,6 +263,81 @@ def unassoc_product(request, wishlist_id, product_id):
     wishlist = Wishlist.objects.get(id=wishlist_id, user=request.user)
     wishlist.products.remove(product_id)
     return redirect("wishlist_index")
+
+
+def cart_view(request):
+    cart, created = Order.objects.get_or_create(
+        user_id=request.user,
+        status="c",
+        defaults={
+            "total_cost": 0,
+            "shipping_address": "",
+        },
+    )
+
+    items = Order_Detail.objects.filter(order_id=cart)
+
+    return render(
+        request,
+        "cart.html",
+        {
+            "cart": cart,
+            "items": items,
+        },
+    )
+
+
+def add_to_cart(request, product_id):
+    product = Product.objects.get(id=product_id)
+    cart, created = Order.objects.get_or_create(
+        user_id=request.user,
+        status="c",
+        defaults={
+            "total_cost": 0,
+            "shipping_address": "",
+        },
+    )
+
+    quantity_str = 0
+
+    if request.method == "POST":
+        quantity_str = request.POST.get("quantity", "1")
+    else:
+        quantity_str = "1"
+
+    quantity = int(quantity_str)
+
+    # to prevent users from doing 0 or negative qty
+    if quantity < 1:
+        quantity = 1
+
+    existing_item = Order_Detail.objects.filter(
+        order_id=cart,
+        product_id=product,
+    ).first()
+
+    if existing_item:
+
+        existing_item.quantity += quantity
+        existing_item.save()
+    else:
+
+        Order_Detail.objects.create(
+            order_id=cart,
+            product_id=product,
+            quantity=quantity,
+            order_cost=0,
+        )
+
+    items = Order_Detail.objects.filter(order_id=cart)
+    total = 0
+    for item in items:
+        total = total + item.order_cost
+
+    cart.total_cost = total
+    cart.save()
+
+    return redirect("cart_view")
 
 
 def customer_orders(request):

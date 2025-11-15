@@ -80,4 +80,7 @@ urlpatterns = [
         views.customer_product_detail,
         name="customer_product_detail",
     ),
+    # Cart
+    path("cart/", views.cart_view, name="cart_view"),
+    path("cart/add/<int:product_id>/", views.add_to_cart, name="add_to_cart"),
 ]
