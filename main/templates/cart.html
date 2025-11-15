@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="container my-4">
+  <h1 class="mb-4">My Cart</h1>
+
+  {% if items %}
+  <table class="table table-bordered align-middle text-center">
+    <thead class="table-light">
+      <tr>
+        <th>Image</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td style="width: 120px">
+          <img
+            src="{% static item.product_id.image|cut:'main/static/' %}"
+            alt="{{ item.product_id.name }}"
+            style="width: 100px; height: 80px; object-fit: cover"
+            class="rounded"
+          />
+        </td>
+
+        <td>{{ item.product_id.name }}</td>
+
+        <td>{{ item.product_id.price }} BHD</td>
+
+        <td>{{ item.quantity }}</td>
+
+        <td>{{ item.order_cost }} BHD</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="text-end mt-4">
+    <h4>Total: {{ cart.total_cost }} BHD</h4>
+  </div>
+
+  {% else %}
+  <h5>No items in your cart.</h5>
+  {% endif %}
+</div>
+
+{% endblock %}

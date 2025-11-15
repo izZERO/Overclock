@@ -34,7 +34,7 @@
       <div class="card-body">
         <h5 class="card-title">{{ product.name }}</h5>
         <p>{{ product.description }}</p>
-        <p>${{ product.price }}</p>
+        <p>{{ product.price }} BHD</p>
 
         <a
           href="{% url 'customer_product_detail' product.id %}"
