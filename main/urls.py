@@ -46,6 +46,7 @@ urlpatterns = [
     path("", views.landing, name="landing"),
     path("about/", views.about, name="about"),
     # Profile
+    path("profile/", views.profile_view, name="profile-view"),
     path("profile/edit", views.profile, name="profile-edit"),
     # Order
     path("manage/orders/", views.OrderList.as_view(), name="orders_index"),
