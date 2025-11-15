@@ -340,6 +340,52 @@ def add_to_cart(request, product_id):
     return redirect("cart_view")
 
 
+def update_cart_item(request, item_id):
+    item = Order_Detail.objects.get(id=item_id)
+    cart = item.order_id
+
+    if request.method == "POST":
+
+        quantity = int(request.POST.get("quantity", item.quantity))
+
+        if quantity < 1:
+            quantity = 1
+
+        item.quantity = quantity
+        # order_cost is updated in save()
+        item.save()
+
+        # Redo cart total
+        items = Order_Detail.objects.filter(order_id=cart)
+        total = 0
+        for item in items:
+            total = total + item.order_cost
+
+        cart.total_cost = total
+        cart.save()
+
+    return redirect("cart_view")
+
+
+def remove_from_cart(request, item_id):
+    item = Order_Detail.objects.get(id=item_id)
+    cart = item.order_id
+
+    if request.method == "POST":
+        item.delete()
+
+        # Redo cart total after delete
+        items = Order_Detail.objects.filter(order_id=cart)
+        total = 0
+        for item in items:
+            total = total + item.order_cost
+
+        cart.total_cost = total
+        cart.save()
+
+    return redirect("cart_view")
+
+
 def customer_orders(request):
     orders = Order.objects.filter(user_id=request.user).order_by("-date_placed")
 

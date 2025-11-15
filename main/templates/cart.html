@@ -12,6 +12,7 @@
         <th>Price</th>
         <th>Quantity</th>
         <th>Total</th>
+        <th>Remove?</th>
       </tr>
     </thead>
 
@@ -31,9 +32,39 @@
 
         <td>{{ item.product_id.price }} BHD</td>
 
-        <td>{{ item.quantity }}</td>
+        <td>
+          <form
+            action="{% url 'update_cart_item' item.id %}"
+            method="post"
+            class="d-inline"
+          >
+            {% csrf_token %}
+            <input
+              type="number"
+              name="quantity"
+              min="1"
+              value="{{ item.quantity }}"
+              style="width: 70px; text-align: center"
+              required
+            />
+            <button class="btn btn-sm btn-outline-secondary ms-1">
+              Update
+            </button>
+          </form>
+        </td>
 
         <td>{{ item.order_cost }} BHD</td>
+
+        <td>
+          <form
+            action="{% url 'remove_from_cart' item.id %}"
+            method="post"
+            class="d-inline"
+          >
+            {% csrf_token %}
+            <button class="btn btn-sm btn-danger">Remove</button>
+          </form>
+        </td>
       </tr>
       {% endfor %}
     </tbody>

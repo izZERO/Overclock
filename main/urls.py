@@ -52,9 +52,6 @@ urlpatterns = [
     path("accounts/signup/", views.signup, name="signup"),
     path("", views.landing, name="landing"),
     path("about/", views.about, name="about"),
-
-
-    
     # Customer Pages
     path("profile/", views.profile_view, name="profile-view"),
     path("profile/edit", views.profile, name="profile-edit"),
@@ -83,4 +80,7 @@ urlpatterns = [
     # Cart
     path("cart/", views.cart_view, name="cart_view"),
     path("cart/add/<int:product_id>/", views.add_to_cart, name="add_to_cart"),
+    path("cart/update/<int:item_id>/", views.update_cart_item, name="update_cart_item"),
+    path("cart/remove/<int:item_id>/", views.remove_from_cart, name="remove_from_cart"),
+    
 ]
