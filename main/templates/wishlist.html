@@ -1,13 +1,43 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="container my-4">
   <h1>My Wishlist</h1>
 
   {% if products %}
+  <div class="row mt-4">
     {% for product in products %}
-      <h2>{{ product.name }}</h2>
-      <p>${{ product.price }}</p>
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <img
+          src="{% static product.image|cut:'main/static/' %}"
+          class="card-img-top"
+          style="height: 200px; object-fit: cover"
+          alt="{{ product.name }}"
+        />
+
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p>${{ product.price }}</p>
+
+          <a
+            href="{% url 'customer_product_detail' product.id %}"
+            class="btn btn-primary btn-sm"
+          >
+            View
+          </a>
+
+          <a
+            href="{% url 'unassoc_product' wishlist.id product.id %}"
+            class="btn btn-danger btn-sm ms-2"
+          >
+            Remove
+          </a>
+        </div>
+      </div>
+    </div>
     {% endfor %}
+  </div>
   {% else %}
-    <h5>No Products :(</h5>
+  <h5>No Products :(</h5>
   {% endif %}
+</div>
 {% endblock %}
