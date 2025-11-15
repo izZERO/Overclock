@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
+from django.db.models import Q
 
 
 # Create your views here.
@@ -68,6 +69,19 @@ def manage_index(request):
 
 class ProductList(ListView):
     model = Product
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get("search")
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(name__icontains=search_query)
+                | Q(description__icontains=search_query)
+                | Q(category__name__icontains=search_query)
+            )
+
+        return queryset
 
 
 class ProductDetail(DetailView):

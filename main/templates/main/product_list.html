@@ -9,6 +9,38 @@
     Add Product
   </a>
 </div>
+
+<div class="my-3">
+  <form action="{% url 'products_index' %}" class="d-flex gap-2">
+    <input
+      type="text"
+      name="search"
+      class="form-control"
+      placeholder="Search products by name, description, or category..."
+      value="{{ request.GET.search }}"
+      style="max-width: 500px"
+    />
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-search"></i> Search
+    </button>
+    {% if request.GET.search %}
+    <a href="{% url 'products_index' %}" class="btn btn-secondary">
+      <i class="bi bi-x-circle"></i> Clear
+    </a>
+    {% endif %}
+  </form>
+  {% if request.GET.search %}
+  <p class="text-muted mt-2">
+    Showing results for: <strong>"{{ request.GET.search }}"</strong>
+    {% if product_list.count == 0 %}
+    - No products found.
+    {% else %}
+    - Found {{ product_list.count }} products:
+    {% endif %}
+  </p>
+  {% endif %}
+</div>
+
 <div class="container-fluid d-flex flex-wrap gap-2">
   {% for product in product_list %}
 
