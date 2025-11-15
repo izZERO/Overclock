@@ -18,8 +18,8 @@
     <img
       src="{% static product.image|cut:'main/static/' %}"
       class="card-img-top img-thumbnail rounded-start"
-      alt="..."
-      style="height: 245px"
+      alt="{{ product.name }}"
+      style="height: 245px; object-fit: cover"
     />
     <div class="card-body">
       <a href="{%url 'products_detail' product.id %}">

@@ -44,7 +44,6 @@ urlpatterns = [
     # Signup
     path("accounts/signup/", views.signup, name="signup"),
     path("", views.landing, name="landing"),
-    path("browse/", views.browse, name="browse"),
     path("about/", views.about, name="about"),
     # Profile
     path("profile/edit", views.profile, name="profile-edit"),
@@ -72,4 +71,7 @@ urlpatterns = [
         views.unassoc_product,
         name="unassoc_product",
     ),
+    # Browse
+    path("browse/", views.browse, name="browse"),
+    path("browse/<int:category_id>/", views.browse_category, name="browse_category"),
 ]

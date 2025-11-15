@@ -1,4 +1,52 @@
-{% extends 'base.html' %} {% block content %}
-<h1>Overclocked ⚡</h1>
+{% extends 'base.html' %} {% block content %} {% load static %}
+<div class="container my-4">
+  <h1 class="mb-4">Browse Products</h1>
 
+  {% for category in categories %}
+  <h2 class="mb-3">
+    Latest
+    <a
+      href="{% url 'browse_category' category.id %}"
+      style="font-size: 32px; text-decoration: none; color: black"
+    >
+      {{ category.name }}s
+    </a>
+
+    <a
+      href="{% url 'browse_category' category.id %}"
+      style="font-size: 32px; margin-left: 8px; text-decoration: none"
+    >
+      »
+    </a>
+  </h2>
+
+  <div style="display: flex; overflow-x: auto; gap: 16px; padding-bottom: 16px">
+    {% for product in products %} {% if product.category.id == category.id %}
+
+    <div class="card" style="min-width: 260px">
+      <img
+        src="{% static product.image|cut:'main/static/' %}"
+        alt="{{ product.name }}"
+        style="height: 160px; object-fit: cover"
+        class="card-img-top"
+      />
+
+      <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p>{{ product.description }}</p>
+        <p>${{ product.price }}</p>
+
+        <a
+          href="{% url 'products_detail' product.id %}"
+          class="btn btn-primary btn-sm"
+        >
+          View
+        </a>
+      </div>
+    </div>
+    {% endif %} {% endfor %}
+  </div>
+
+  {% endfor %}
+</div>
 {% endblock %}
