@@ -79,16 +79,16 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end text-small shadow">
               <li>
+                <a class="dropdown-item" href="{% url 'customer_orders' %}"
+                  >Orders</a
+                >
+              </li>
+              <li>
                 <a class="dropdown-item" href="{% url 'profile-view' %}"
                   >Profile</a
                 >
               </li>
               <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a href="/accounts/password_change" class="dropdown-item"
-                  >Change Password</a
-                >
-              </li>
               <li>
                 <form action="{% url 'logout' %}" method="post">
                   {% csrf_token %}
