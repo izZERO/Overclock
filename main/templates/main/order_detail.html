@@ -1,27 +1,32 @@
-{% extends 'manage_base.html' %} {% block content %}
+{% extends 'manage_base.html' %} {% load static %} {% block content %}
 <div class="card mb-3 container-fluid">
   <div class="row g-0">
     <div class="col-md-8">
       <div class="card-body">
-        <h5 class="card-title">Order ID: {{order.id}}</h5>
-        <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-person-circle me-2"></i> placed by:
-          {{order.user_id.username}}</span
-        >
-        <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-suitcase me-2"></i>{{order.total_cost}} KG</span
-        >
-        <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-house-fill me-2"></i>{{order.shipping_address}}</span
-        >
-        <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-calendar-date-fill me-2"></i
-          >{{order.date_placed}}</span
-        >
+        <h5 class="card-title">Order ID: {{ order.id }}</h5>
 
-        <p class="card-text mt-5">Status: {{order.get_status_display}}</p>
+        <span class="badge rounded-pill text-bg-primary">
+          <i class="bi bi-person-circle me-2"></i>
+          Placed by: {{ order.user_id.username }}
+        </span>
 
-        <!-- Button trigger modal -->
+        <span class="badge rounded-pill text-bg-primary">
+          <i class="bi bi-currency-dollar me-2"></i>
+          Total: {{ order.total_cost }} BHD
+        </span>
+
+        <span class="badge rounded-pill text-bg-primary">
+          <i class="bi bi-house-fill me-2"></i>
+          {{ order.shipping_address }}
+        </span>
+
+        <span class="badge rounded-pill text-bg-primary">
+          <i class="bi bi-calendar-date-fill me-2"></i>
+          {{ order.date_placed }}
+        </span>
+
+        <p class="card-text mt-4">Status: {{ order.get_status_display }}</p>
+
         <button
           type="button"
           class="btn btn-primary"
@@ -31,7 +36,6 @@
           Update Status
         </button>
 
-        <!-- Modal -->
         <div
           class="modal fade"
           id="exampleModal"
@@ -77,6 +81,42 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="card container-fluid">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Order Items</h5>
+
+    <table class="table table-bordered align-middle text-center">
+      <thead class="table-light">
+        <tr>
+          <th>Image</th>
+          <th>Product</th>
+          <th>Price (BHD)</th>
+          <th>Quantity</th>
+          <th>Line Total (BHD)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td style="width: 120px">
+            <img
+              src="{% static item.product_id.image|cut:'main/static/' %}"
+              alt="{{ item.product_id.name }}"
+              style="width: 100px; height: 80px; object-fit: cover"
+              class="rounded"
+            />
+          </td>
+          <td>{{ item.product_id.name }}</td>
+          <td>{{ item.product_id.price }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.order_cost }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
 

@@ -1,0 +1,98 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="mb-1">
+        <i class="bi bi-receipt-cutoff me-2"></i>Order #{{ order.id }}
+      </h1>
+      <p class="text-muted mb-0">
+        Placed on {{ order.date_placed|date:"M d, Y" }} at
+        {{order.date_placed|date:"h:i A" }}
+      </p>
+    </div>
+    <a href="{% url 'customer_orders' %}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left me-1"></i>Back to Orders
+    </a>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <small class="text-muted">Status</small>
+          <div class="mt-1">
+            {% if order.status == 'c' %}
+            <span class="badge bg-secondary">
+              <i class="bi bi-cart me-1"></i>Cart
+            </span>
+            {% elif order.status == 'p' %}
+            <span class="badge bg-info">
+              <i class="bi bi-check-circle me-1"></i>Placed
+            </span>
+            {% elif order.status == 't' %}
+            <span class="badge bg-warning text-dark">
+              <i class="bi bi-truck me-1"></i>In Transit
+            </span>
+            {% elif order.status == 'd' %}
+            <span class="badge bg-success">
+              <i class="bi bi-box-seam me-1"></i>Delivered
+            </span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-3 mb-3">
+          <small class="text-muted">Total Amount</small>
+          <h5 class="mb-0 text-primary">{{ order.total_cost }} BHD</h5>
+        </div>
+        <div class="col-md-3 mb-3">
+          <small class="text-muted">Shipping Address</small>
+          <p class="mb-0">{{ order.shipping_address }}</p>
+        </div>
+        <div class="col-md-3 mb-3">
+          <small class="text-muted">Contact Phone</small>
+          <p class="mb-0">{{ user.profile.phone }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-white">
+      <h5 class="mb-0">
+        <i class="bi bi-list-ul me-2"></i>Items in this Order
+      </h5>
+    </div>
+    <div class="card-body">
+      <table class="table table-bordered align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Price (BHD)</th>
+            <th>Quantity</th>
+            <th>Line Total (BHD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td style="width: 120px">
+              <img
+                src="{% static item.product_id.image|cut:'main/static/' %}"
+                alt="{{ item.product_id.name }}"
+                style="width: 100px; height: 80px; object-fit: cover"
+                class="rounded"
+              />
+            </td>
+            <td>{{ item.product_id.name }}</td>
+            <td>{{ item.product_id.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.order_cost }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

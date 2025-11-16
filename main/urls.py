@@ -57,6 +57,11 @@ urlpatterns = [
     path("profile/edit", views.profile, name="profile-edit"),
     # Order
     path("orders/", views.customer_orders, name="customer_orders"),
+    path(
+        "orders/<int:order_id>/",
+        views.customer_order_detail,
+        name="customer_order_detail",
+    ),
     # Wishlist
     path("wishlist/", views.wishlist_index, name="wishlist_index"),
     path(
