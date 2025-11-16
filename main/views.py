@@ -288,7 +288,12 @@ def cart_view(request):
 
 
 def add_to_cart(request, product_id):
+
     product = Product.objects.get(id=product_id)
+    # out of stock check in case someone crafts a POST request manually
+    if product.stock <= 0:
+        return redirect("customer_product_detail", product_id=product.id)
+
     cart, created = Order.objects.get_or_create(
         user_id=request.user,
         status="c",
@@ -318,7 +323,7 @@ def add_to_cart(request, product_id):
 
     if existing_item:
 
-        existing_item.quantity += quantity
+        existing_item.quantity = quantity
         existing_item.save()
     else:
 
@@ -338,6 +343,113 @@ def add_to_cart(request, product_id):
     cart.save()
 
     return redirect("cart_view")
+
+
+def update_cart_item(request, item_id):
+    item = Order_Detail.objects.get(id=item_id)
+    cart = item.order_id
+
+    if request.method == "POST":
+
+        quantity = int(request.POST.get("quantity", item.quantity))
+
+        if quantity < 1:
+            quantity = 1
+
+        item.quantity = quantity
+        # order_cost is updated in save()
+        item.save()
+
+        # Redo cart total
+        items = Order_Detail.objects.filter(order_id=cart)
+        total = 0
+        for item in items:
+            total = total + item.order_cost
+
+        cart.total_cost = total
+        cart.save()
+
+    return redirect("cart_view")
+
+
+def remove_from_cart(request, item_id):
+    item = Order_Detail.objects.get(id=item_id)
+    cart = item.order_id
+
+    if request.method == "POST":
+        item.delete()
+
+        # Redo cart total after delete
+        items = Order_Detail.objects.filter(order_id=cart)
+        total = 0
+        for item in items:
+            total = total + item.order_cost
+
+        cart.total_cost = total
+        cart.save()
+
+    return redirect("cart_view")
+
+
+def place_order(request):
+    cart = Order.objects.get(user_id=request.user, status="c")
+    items = Order_Detail.objects.filter(order_id=cart)
+
+    if not items:  #  if cart is empty then reload thy page
+        return redirect("cart_view")
+
+    if request.method == "POST":
+        address = request.POST.get("address", "").strip()
+        phone = request.POST.get("phone", "").strip()
+
+        # If either is empty, show error in thy cart page
+        if address == "" or phone == "":
+            return render(
+                request,
+                "cart.html",
+                {
+                    "cart": cart,
+                    "items": items,
+                    "error": "Please fill in both address and phone number to place your order, you really want your items to be lost in the sea?",
+                },
+            )
+
+        # Save / update to user's profile while at it
+        profile = Profile.objects.get(user=request.user)
+        profile.address = address
+        profile.phone = phone
+        profile.save()
+        # Save shipping address on the order
+        cart.shipping_address = address
+
+        # Deduct stock
+        for item in items:
+            product = item.product_id
+            product.stock = product.stock - item.quantity
+            if product.stock < 0:
+                product.stock = 0
+            product.save()
+
+        cart.status = "p"
+        cart.save()
+
+        return redirect("thank_you", order_id=cart.id)
+
+    return redirect("cart_view")
+
+
+def thank_you(request, order_id):
+    order = Order.objects.get(id=order_id, user_id=request.user)
+    items = Order_Detail.objects.filter(order_id=order)
+
+    return render(
+        request,
+        "thank_you.html",
+        {
+            "order": order,
+            "items": items,
+        },
+    )
 
 
 def customer_orders(request):

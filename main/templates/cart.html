@@ -12,6 +12,7 @@
         <th>Price</th>
         <th>Quantity</th>
         <th>Total</th>
+        <th>Remove?</th>
       </tr>
     </thead>
 
@@ -31,9 +32,40 @@
 
         <td>{{ item.product_id.price }} BHD</td>
 
-        <td>{{ item.quantity }}</td>
+        <td>
+          <form
+            action="{% url 'update_cart_item' item.id %}"
+            method="post"
+            class="d-inline"
+          >
+            {% csrf_token %}
+            <input
+              type="number"
+              name="quantity"
+              min="1"
+              max="{{item.product_id.stock}}"
+              value="{{ item.quantity }}"
+              style="width: 70px; text-align: center"
+              required
+            />
+            <button class="btn btn-sm btn-outline-secondary ms-1">
+              Update
+            </button>
+          </form>
+        </td>
 
         <td>{{ item.order_cost }} BHD</td>
+
+        <td>
+          <form
+            action="{% url 'remove_from_cart' item.id %}"
+            method="post"
+            class="d-inline"
+          >
+            {% csrf_token %}
+            <button class="btn btn-sm btn-danger">Remove</button>
+          </form>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
@@ -41,6 +73,40 @@
 
   <div class="text-end mt-4">
     <h4>Total: {{ cart.total_cost }} BHD</h4>
+  </div>
+
+  {% if error %}
+  <div class="alert alert-danger mt-3">{{ error }}</div>
+  {% endif %}
+
+  <div class="mt-4">
+    <h5>Shipping Details</h5>
+    <form action="{% url 'place_order' %}" method="post" class="row g-3">
+      {% csrf_token %}
+      <div class="col-md-6">
+        <label class="form-label">Address</label>
+        <input
+          type="text"
+          name="address"
+          class="form-control"
+          value="{{ user.profile.address }}"
+          required
+        />
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Phone Number</label>
+        <input
+          type="text"
+          name="phone"
+          class="form-control"
+          value="{{ user.profile.phone }}"
+          required
+        />
+      </div>
+      <div class="col-12 text-end mt-3">
+        <button type="submit" class="btn btn-success">Place Order</button>
+      </div>
+    </form>
   </div>
 
   {% else %}
