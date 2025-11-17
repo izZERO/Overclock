@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.conf import settings
 from .models import Profile, Product, Category, Order, Order_Detail, Wishlist
 from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm, UpdateStatus
 from django.views import View
@@ -9,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
+import stripe
+from django.core.mail import send_mail
 
 
 # Create your views here.
@@ -151,6 +155,7 @@ class ProductCreate(CreateView):
         "description",
         "image",
         "price",
+        "price_id",
         "weight",
         "stock",
         "category",
@@ -168,6 +173,7 @@ class ProductUpdate(UpdateView):
         "description",
         "image",
         "price",
+        "price_id",
         "weight",
         "stock",
         "category",
@@ -423,19 +429,31 @@ def place_order(request):
         profile.save()
         # Save shipping address on the order
         cart.shipping_address = address
-
-        # Deduct stock
-        for item in items:
-            product = item.product_id
-            product.stock = product.stock - item.quantity
-            if product.stock < 0:
-                product.stock = 0
-            product.save()
-
-        cart.status = "p"
         cart.save()
 
-        return redirect("thank_you", order_id=cart.id)
+        # purchase using stripe
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+
+        stripe_data = []
+        for item in items:
+            stripe_data.append(
+                {
+                    "price": item.product_id.price_id,
+                    "quantity": item.quantity,
+                }
+            )
+
+        checkout_session = stripe.checkout.Session.create(
+            line_items=stripe_data,
+            mode="payment",
+            success_url=request.build_absolute_uri(
+                reverse("thank_you", kwargs={"order_id": cart.id})
+            ),
+            cancel_url=request.build_absolute_uri(reverse("cart_view")),
+        )
+        return redirect(checkout_session.url, code=303)
+
+
 
     return redirect("cart_view")
 
@@ -444,6 +462,253 @@ def thank_you(request, order_id):
     order = Order.objects.get(id=order_id, user_id=request.user)
     items = Order_Detail.objects.filter(order_id=order)
 
+    # Deduct stock
+    for item in items:
+        product = item.product_id
+        product.stock = product.stock - item.quantity
+        if product.stock < 0:
+            product.stock = 0
+        product.save()
+
+    order.status = "p"
+    order.save()
+
+    # Build items HTML
+    items_html = ""
+    for item in items:
+        items_html += "<tr>"
+        items_html += "<td>" + str(item.product_id.name) + "</td>"
+        items_html += "<td style='text-align: center;'>" + str(item.quantity) + "</td>"
+        items_html += (
+            "<td style='text-align: right;'>$"
+            + "{:.2f}".format(item.product_id.price)
+            + "</td>"
+        )
+        items_html += (
+            "<td style='text-align: right;'>$"
+            + "{:.2f}".format(item.order_cost)
+            + "</td>"
+        )
+        items_html += "</tr>"
+
+    # Build email
+    customer_name = request.user.get_full_name() or request.user.username
+    order_date = order.date_placed.strftime("%B %d, %Y at %I:%M %p")
+    order_detail_url = request.build_absolute_uri(
+        reverse("customer_order_detail", kwargs={"order_id": order.id})
+    )
+
+    html_message = (
+        """
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Order Confirmation</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f4f4f4;
+            }
+            .container {
+                background-color: #ffffff;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            .header {
+                text-align: center;
+                border-bottom: 3px solid #fd8211;
+                padding-bottom: 20px;
+                margin-bottom: 30px;
+            }
+            .header h1 {
+                color: #fd8211;
+                margin: 0;
+                font-size: 32px;
+            }
+            .header p {
+                color: #666;
+                margin: 5px 0 0 0;
+            }
+            .order-info {
+                background-color: #f9f9f9;
+                padding: 15px;
+                border-radius: 5px;
+                margin-bottom: 25px;
+            }
+            .order-info h2 {
+                color: #fd8211;
+                margin-top: 0;
+                font-size: 20px;
+            }
+            .order-info p {
+                margin: 8px 0;
+            }
+            .order-info strong {
+                color: #333;
+            }
+            .items-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            .items-table th {
+                background-color: #fd8211;
+                color: white;
+                padding: 12px;
+                text-align: left;
+                font-weight: bold;
+            }
+            .items-table td {
+                padding: 12px;
+                border-bottom: 1px solid #ddd;
+            }
+            .items-table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .total-section {
+                text-align: right;
+                margin-top: 20px;
+                padding-top: 15px;
+                border-top: 2px solid #fd8211;
+            }
+            .total-section p {
+                margin: 8px 0;
+                font-size: 16px;
+            }
+            .total-amount {
+                font-size: 24px;
+                color: fd8211;
+                font-weight: bold;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #ddd;
+                color: #666;
+                font-size: 14px;
+            }
+            .footer p {
+                margin: 5px 0;
+            }
+            .cta-button {
+                display: inline-block;
+                padding: 12px 30px;
+                background-color: #fd8211;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                margin: 20px 0;
+                font-weight: bold;
+            }
+            .shipping-address {
+                background-color: #fff8e1;
+                padding: 15px;
+                border-left: 4px solid #ffc107;
+                margin: 20px 0;
+            }
+            .shipping-address h3 {
+                margin-top: 0;
+                color: #f57c00;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>OVERCLOCK</h1>
+                <p>Thank you for your purchase!</p>
+            </div>
+
+            <div class="order-info">
+                <h2>Order Confirmation</h2>
+                <p><strong>Order Number:</strong> #"""
+        + str(order.id)
+        + """</p>
+                <p><strong>Order Date:</strong> """
+        + order_date
+        + """</p>
+                <p><strong>Customer:</strong> """
+        + customer_name
+        + """</p>
+                <p><strong>Email:</strong> """
+        + request.user.email
+        + """</p>
+            </div>
+
+            <div class="shipping-address">
+                <h3>Shipping Address</h3>
+                <p>"""
+        + str(order.shipping_address)
+        + """</p>
+            </div>
+
+            <h2 style="color: #fd8211; margin-top: 30px;">Order Items</h2>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th style="text-align: center;">Quantity</th>
+                        <th style="text-align: right;">Price</th>
+                        <th style="text-align: right;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    """
+        + items_html
+        + """
+                </tbody>
+            </table>
+
+            <div class="total-section">
+                <p>Subtotal: $"""
+        + "{:.2f}".format(order.total_cost)
+        + """</p>
+                <p class="total-amount">Total: $"""
+        + "{:.2f}".format(order.total_cost)
+        + """</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a style="text-decoration: none; color: white;" href="""
+        " + order_detail_url + "
+        """ class="cta-button">
+                    View Order Details
+                </a>
+            </div>
+
+            <div class="footer">
+                <p><strong>What happens next?</strong></p>
+                <p>We're processing your order and will send you a shipping notification once it's on its way.</p>
+                <p style="margin-top: 20px;">If you have any questions, feel free to contact our support team.</p>
+                <p style="margin-top: 20px; color: #999; font-size: 12px;">
+                    2025 OVERCLOCK. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    )
+
+    send_mail(
+        subject="Thank you for your purchase from OVERCLOCK - Order Confirmation",
+        message="Thank you for your order #"
+        + str(order.id)
+        + "! Your order has been confirmed and is being processed.",
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[request.user.email],
+        fail_silently=False,
+        html_message=html_message,
+    )
     return render(
         request,
         "thank_you.html",
