@@ -31,10 +31,11 @@ class Category(models.Model):
 
 class Product(models.Model):
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=250)
     description = models.CharField(max_length=250, default="")
     image = models.ImageField(upload_to="main/static/uploads", default="")
     price = models.FloatField()
+    price_id = models.CharField(max_length=250)
     weight = models.FloatField()
     stock = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)

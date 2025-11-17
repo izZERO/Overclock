@@ -19,7 +19,7 @@
       »
     </a>
   </h2>
-
+  {% if category.product_set.count %}
   <div style="display: flex; overflow-x: auto; gap: 16px; padding-bottom: 16px">
     {% for product in products %} {% if product.category.id == category.id %}
 
@@ -46,7 +46,8 @@
     </div>
     {% endif %} {% endfor %}
   </div>
-
-  {% endfor %}
+  {% else %}
+  <p>No products</p>
+  {% endif %} {% endfor %}
 </div>
 {% endblock %}
