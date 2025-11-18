@@ -94,4 +94,5 @@ urlpatterns = [
         views.thank_you,
         name="thank_you",
     ),
+    path("chatbot/", views.chatbot, name="chatbot"),
 ]
