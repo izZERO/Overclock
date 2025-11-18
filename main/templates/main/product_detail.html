@@ -1,33 +1,63 @@
-{% extends 'manage_base.html' %} {% block content %}
-<div class="card mb-3 container-fluid">
-  <div class="row g-0">
-    <div class="col-md-4">
-      {% load static %}
-      <img
-        src="{% static product.image|cut:'main/static/' %}"
-        class="img-fluid rounded-start"
-        alt="{{product.name}} Image"
-      />
+{% extends 'manage_base.html' %} {% load static %} {% block content %}
+
+<div class="container my-4">
+  <h1 class="mb-4"><i class="bi bi-box-seam me-3 h1"></i>Product Details</h1>
+
+  <div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="mb-0">{{ product.name }}</h5>
+        <small class="text-muted">Product information and pricing</small>
+      </div>
+      <div>
+        <a
+          href="{% url 'products_update' product.id %}"
+          class="btn btn-sm btn-outline-primary me-2"
+        >
+          <i class="bi bi-pencil-square me-1"></i>Edit
+        </a>
+        <a
+          href="{% url 'products_delete' product.id %}"
+          class="btn btn-sm btn-outline-danger"
+        >
+          <i class="bi bi-trash me-1"></i>Delete
+        </a>
+      </div>
     </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title">{{product.name}}</h5>
-        <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-currency-dollar"></i> {{product.price}} BHD</span
-        >
-        <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-suitcase me-2"></i>{{product.weight}} KG</span
-        >
-        <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-calculator me-2"></i>{{product.stock}}</span
-        >
-        <span class="badge rounded-pill text-bg-primary"
-          ><i class="bi bi-tag me-2"></i>{{product.category}}</span
-        >
-        <p class="card-text mt-5">{{product.description}}</p>
-        <p class="card-text mt-5">Price ID: {{product.price_id}}</p>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <img
+            src="{% static product.image|cut:'main/static/' %}"
+            class="img-fluid rounded"
+            alt="{{ product.name }} Image"
+            style="object-fit: cover; width: 100%; height: 100%"
+          />
+        </div>
+        <div class="col-md-8">
+          <div class="mb-3">
+            <span class="badge rounded-pill text-bg-primary me-1">
+              <i class="bi bi-currency-dollar"></i> {{ product.price }} BHD
+            </span>
+            <span class="badge rounded-pill text-bg-primary me-1">
+              <i class="bi bi-suitcase me-2"></i>{{ product.weight }} KG
+            </span>
+            <span class="badge rounded-pill text-bg-primary me-1">
+              <i class="bi bi-calculator me-2"></i>{{ product.stock }}
+            </span>
+            <span class="badge rounded-pill text-bg-primary">
+              <i class="bi bi-tag me-2"></i>{{ product.category }}
+            </span>
+          </div>
+
+          <p class="card-text">{{ product.description }}</p>
+          <p class="card-text mt-3">
+            <small class="text-muted">Price ID: {{ product.price_id }}</small>
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

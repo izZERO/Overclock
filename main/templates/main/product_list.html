@@ -1,86 +1,91 @@
-{% extends 'manage_base.html' %} {% block content %}
-<div style="display: flex; justify-content: space-between">
-  <h1>Products List</h1>
-  <a
-    href="{%url 'products_create' %}"
-    class="btn btn-primary me-2 mt-2"
-    role="button"
-  >
-    Add Product
-  </a>
-</div>
+{% extends 'manage_base.html' %} {% load static %} {% block content %}
 
-<div class="my-3">
-  <form action="{% url 'products_index' %}" class="d-flex gap-2">
-    <input
-      type="text"
-      name="search"
-      class="form-control"
-      placeholder="Search products by name, description, or category..."
-      value="{{ request.GET.search }}"
-      style="max-width: 500px"
-    />
-    <button type="submit" class="btn btn-primary">
-      <i class="bi bi-search"></i> Search
-    </button>
-    {% if request.GET.search %}
-    <a href="{% url 'products_index' %}" class="btn btn-secondary">
-      <i class="bi bi-x-circle"></i> Clear
-    </a>
-    {% endif %}
-  </form>
-  {% if request.GET.search %}
-  <p class="text-muted mt-2">
-    Showing results for: <strong>"{{ request.GET.search }}"</strong>
-    {% if product_list.count == 0 %}
-    - No products found.
-    {% else %}
-    - Found {{ product_list.count }} products:
-    {% endif %}
-  </p>
-  {% endif %}
-</div>
-
-<div class="container-fluid d-flex flex-wrap gap-2">
-  {% for product in product_list %}
-
-  <div class="card" style="width: 18rem; height: 30rem">
-    {% load static %}
-
-    <img
-      src="{% static product.image|cut:'main/static/' %}"
-      class="card-img-top img-thumbnail rounded-start"
-      alt="{{ product.name }}"
-      style="height: 245px; object-fit: cover"
-    />
-    <div class="card-body">
-      <a href="{%url 'products_detail' product.id %}">
-        <h5 class="card-title">{{product.name}}</h5>
-      </a>
-      <span class="badge rounded-pill text-bg-primary"
-        ><i class="bi bi-currency-dollar"></i> {{product.price}} BHD</span
-      >
-
-      <span class="badge rounded-pill text-bg-primary"
-        ><i class="bi bi-calculator me-2"></i>{{product.stock}}</span
-      >
-
-      <a
-        href="{%url 'products_update' product.id %}"
-        class="btn btn-primary me-2"
-        role="button"
-      >
-        Edit
-      </a>
-      <a
-        href="{%url 'products_delete' product.id %}"
-        class="btn btn-danger me-2"
-        role="button"
-      >
-        Delete
-      </a>
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="mb-1"><i class="bi bi-box-seam me-2 h1"></i>Products</h1>
+      <p class="text-muted">Manage your product catalog</p>
     </div>
+
+    <a href="{% url 'products_create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg me-1"></i> Add Product
+    </a>
   </div>
-  {% endfor %}
+
+  <div class="mb-3">
+    <form action="{% url 'products_index' %}" class="d-flex gap-2">
+      <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search products by name, description, or category..."
+        value="{{ request.GET.search }}"
+        style="max-width: 500px"
+      />
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-search"></i> Search
+      </button>
+      {% if request.GET.search %}
+      <a href="{% url 'products_index' %}" class="btn btn-secondary">
+        <i class="bi bi-x-circle"></i> Clear
+      </a>
+      {% endif %}
+    </form>
+    {% if request.GET.search %}
+    <p class="text-muted mt-2">
+      Showing results for: <strong>"{{ request.GET.search }}"</strong>
+      {% if product_list.count == 0 %} - No products found. {% else %} - Found
+      {{ product_list.count }} products: {% endif %}
+    </p>
+    {% endif %}
+  </div>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+    {% for product in product_list %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <img
+          src="{% static product.image|cut:'main/static/' %}"
+          class="card-img-top img-thumbnail"
+          alt="{{ product.name }}"
+          style="height: 220px; object-fit: cover"
+        />
+        <div class="card-body d-flex flex-column">
+          <a
+            href="{% url 'products_detail' product.id %}"
+            class="text-decoration-none mb-2"
+          >
+            <h5 class="card-title mb-1">{{ product.name }}</h5>
+          </a>
+
+          <div class="mb-2">
+            <span class="badge rounded-pill text-bg-primary me-1">
+              <i class="bi bi-currency-dollar"></i> {{ product.price }} BHD
+            </span>
+            <span class="badge rounded-pill text-bg-primary">
+              <i class="bi bi-calculator me-2"></i>{{ product.stock }}
+            </span>
+          </div>
+
+          <div class="mt-auto d-flex gap-2">
+            <a
+              href="{% url 'products_update' product.id %}"
+              class="btn btn-sm btn-outline-primary me-2"
+            >
+              <i class="bi bi-pencil-square me-1"></i>Edit
+            </a>
+            <a
+              href="{% url 'products_delete' product.id %}"
+              class="btn btn-sm btn-outline-danger"
+            >
+              <i class="bi bi-trash me-1"></i>Delete
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
+
 {% endblock %}
