@@ -1,29 +1,18 @@
-from datetime import datetime, timedelta
-import stripe
-from django.conf import settings
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
-from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.views.generic import DetailView, ListView
+from django.conf import settings
+from .models import Profile, Product, Category, Order, Order_Detail, Wishlist
+from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm, UpdateStatus
+from django.views import View
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
-from .forms import (
-    RegisterForm,
-    UpdateUserForm,
-    UpdateProfileForm,
-    UpdateStatus,
-)
-from .models import (
-    Profile,
-    Product,
-    Category,
-    Order,
-    Order_Detail,
-    Wishlist,
-)
+from django.views.generic import ListView, DetailView
+from django.db.models import Q
+import stripe
+from django.core.mail import send_mail
+from datetime import datetime, timedelta
 
 
 def landing(request):
@@ -55,7 +44,7 @@ def customer_product_detail(request, product_id):
 
     wishlist = None
     if request.user.is_authenticated:
-        wishlist = Wishlist.objects.get_or_create(user=request.user)
+        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
 
     return render(
         request,
@@ -115,7 +104,7 @@ def profile_view(request):
         order.total_cost for order in Order.objects.filter(user_id=request.user)
     )
 
-    wishlist = Wishlist.objects.get_or_create(user=request.user)
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     wishlist_items = wishlist.products.all()[:4]
     wishlist_count = wishlist.products.count()
 
@@ -156,7 +145,7 @@ def order_detail(request, order_id):
 
 #  User Views
 def wishlist_index(request):
-    wishlist = Wishlist.objects.get_or_create(user=request.user)
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     products = wishlist.products.all()
 
     return render(
@@ -182,7 +171,7 @@ def unassoc_product(request, wishlist_id, product_id):
 
 
 def cart_view(request):
-    cart = Order.objects.get_or_create(
+    cart, created = Order.objects.get_or_create(
         user_id=request.user,
         status="c",
         defaults={
@@ -210,7 +199,7 @@ def add_to_cart(request, product_id):
     if product.stock <= 0:
         return redirect("customer_product_detail", product_id=product.id)
 
-    cart = Order.objects.get_or_create(
+    cart, created = Order.objects.get_or_create(
         user_id=request.user,
         status="c",
         defaults={
