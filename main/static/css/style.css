@@ -1,12 +1,11 @@
 body {
-  /* display: flex;
-  min-height: 100vh;
-  flex-direction: column; */
   min-height: 100vh;
   min-height: -webkit-fill-available;
   font-family: "Poppins", sans-serif !important;
   display: flex;
   flex-direction: column;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
 }
 
 main {
