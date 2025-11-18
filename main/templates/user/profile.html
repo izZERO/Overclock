@@ -16,7 +16,8 @@
               <i class="bi bi-envelope me-2"></i>{{ user.email }}
             </p>
             <p class="text-muted mb-0">
-              <i class="bi bi-calendar me-2"></i>Member since {{ user.date_joined|date:"F Y" }}
+              <i class="bi bi-calendar me-2"></i>Member since {{
+              user.date_joined|date:"F Y" }}
             </p>
           </div>
         </div>
@@ -32,7 +33,7 @@
   <div class="row mb-4">
     <div class="col-md-6 mb-3">
       <div class="card shadow-sm h-100">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header border-primary border-bottom border-2">
           <h5 class="mb-0">
             <i class="bi bi-person-badge me-2"></i>Personal Information
           </h5>
@@ -78,7 +79,7 @@
 
     <div class="col-md-6 mb-3">
       <div class="card shadow-sm h-100">
-        <div class="card-header bg-success text-white">
+        <div class="card-header border-success border-bottom border-2">
           <h5 class="mb-0">
             <i class="bi bi-graph-up me-2"></i>Account Statistics
           </h5>
@@ -86,7 +87,7 @@
         <div class="card-body">
           <div class="row text-center">
             <div class="col-4">
-              <div class="p-3 border rounded">
+              <div class="p-3 border rounded-2">
                 <i
                   class="bi bi-bag-check text-primary"
                   style="font-size: 2rem"
@@ -96,7 +97,7 @@
               </div>
             </div>
             <div class="col-4">
-              <div class="p-3 border rounded">
+              <div class="p-3 border rounded-2">
                 <i
                   class="bi bi-bookmark-heart text-danger"
                   style="font-size: 2rem"
@@ -106,7 +107,7 @@
               </div>
             </div>
             <div class="col-4">
-              <div class="p-3 border rounded">
+              <div class="p-3 border rounded-2">
                 <i
                   class="bi bi-currency-dollar text-success"
                   style="font-size: 2rem"
@@ -133,7 +134,7 @@
 
   <div class="card shadow-sm mb-4">
     <div
-      class="card-header bg-white d-flex justify-content-between align-items-center"
+      class="card-header d-flex justify-content-between align-items-center border-bottom"
     >
       <h5 class="mb-0">
         <i class="bi bi-clock-history me-2"></i>Recent Orders
@@ -203,13 +204,13 @@
 
   <div class="card shadow-sm">
     <div
-      class="card-header bg-white d-flex justify-content-between align-items-center"
+      class="card-header d-flex justify-content-between align-items-center border-bottom"
     >
       <h5 class="mb-0"><i class="bi bi-heart me-2"></i>Wishlist Preview</h5>
       {% if wishlist_count > 0 %}
       <a
         href="{% url 'wishlist_index' %}"
-        class="btn btn-sm btn-outline-danger"
+        class="btn btn-sm btn-outline-primary"
       >
         View Full Wishlist ({{ wishlist_count }})
       </a>

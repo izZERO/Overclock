@@ -41,21 +41,45 @@
           <img
             src="{% static 'images\Overclock-logo.png'%}"
             alt="Overclock-logo"
-            class="image-header ms-3"
+            class="image-header ms-4"
           />
         </a>
       </div>
 
       <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
         <li>
-          <a href="{%url 'browse'%}" class="nav-link px-2 link-secondary"
-            >Browse</a
-          >
+          <a href="{%url 'browse'%}" class="nav-link px-2 link-secondary">
+            <i class="bi bi-compass text-info" style="font-size: 1.1rem"></i>
+            Browse
+          </a>
         </li>
+
+        <li class="nav-link px-2 link-secondary">|</li>
         <li>
-          <a href="{%url 'about'%}" class="nav-link px-2 link-secondary"
-            >About</a
+          <a href="{%url 'cart_view'%}" class="nav-link px-2 link-secondary">
+            <i class="bi bi-cart text-info" style="font-size: 1.1rem"></i>
+            Cart
+          </a>
+        </li>
+        <li class="nav-link px-2 link-secondary">|</li>
+        <li>
+          <a
+            href="{%url 'wishlist_index'%}"
+            class="nav-link px-2 link-secondary"
           >
+            <i
+              class="bi bi-bookmark-heart text-info"
+              style="font-size: 1.1rem"
+            ></i>
+            Wishlist
+          </a>
+        </li>
+        <li class="nav-link px-2 link-secondary">|</li>
+        <li>
+          <a href="{%url 'profile-view'%}" class="nav-link px-2 link-secondary">
+            <i class="bi bi-compass text-info" style="font-size: 1.1rem"></i>
+            Profile
+          </a>
         </li>
       </ul>
 
@@ -63,35 +87,22 @@
         {% if user.is_authenticated %}
 
         <div class="d-flex align-items-center justify-content-end gap-3">
-          <a href="{% url 'cart_view' %}" class="ms-3">
-            <i class="bi bi-cart text-info" style="font-size: 2rem"></i>
-          </a>
-          <a href="{%url 'wishlist_index'%}">
-            <i
-              class="bi bi-bookmark-heart text-info"
-              style="font-size: 2rem"
-            ></i>
-          </a>
-
           <div class="dropdown">
             <a
               href="#"
-              class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
+              class="d-flex align-items-center link-body-emphasis text-decoration-none me-4"
               data-bs-toggle="dropdown"
+              style="appearance: none"
             >
               <i class="bi bi-gear text-info" style="font-size: 2rem"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end text-small shadow">
               <li>
                 <a class="dropdown-item" href="{% url 'customer_orders' %}"
-                  >Orders</a
+                  >My Orders</a
                 >
               </li>
-              <li>
-                <a class="dropdown-item" href="{% url 'profile-view' %}"
-                  >Profile</a
-                >
-              </li>
+
               <li><hr class="dropdown-divider" /></li>
               <li>
                 <div class="form-check form-switch ms-3">
@@ -142,12 +153,10 @@
             >About</a
           >
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link px-2 text-body-secondary disabled">Faq</a>
-        </li>
+
         <li class="nav-item">
           <a href="{%url 'landing'%}" class="nav-link px-2 text-body-secondary"
-            >Landing</a
+            >Home</a
           >
         </li>
         <li class="nav-item">

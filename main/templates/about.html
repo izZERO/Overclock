@@ -1,17 +1,102 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% load static %} {% block content %}
 
-<h1>About Overclock</h1>
-<p>
-  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque, fugiat
-  suscipit. Eius necessitatibus culpa, blanditiis distinctio ipsa numquam
-  ratione quas soluta sunt tempora laborum corporis possimus consequatur
-  molestias magni nihil. lor
-</p>
+<div class="container my-5">
+  <!-- Hero Section -->
+  <div class="text-center mb-5 pb-4">
+    <h1 class="display-4 fw-bold mb-3">
+      <i class="bi bi-lightning-fill text-primary me-2"></i>About Overclock
+    </h1>
+    <p class="lead text-muted">
+      Your trusted partner for high-performance computer hardware
+    </p>
+  </div>
 
-<p>
-  Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum itaque
-  dignissimos rerum molestiae aspernatur at odit, dolore, totam reprehenderit
-  omnis, exercitationem sunt ad? A nihil tempore harum. Eaque, dolorum corporis.
-</p>
+  <!-- Main Description -->
+  <div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="bi bi-info-circle me-2 text-info"></i>Who We Are
+          </h5>
+          <p class="card-text">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Itaque,
+            fugiat suscipit. Eius necessitatibus culpa, blanditiis distinctio
+            ipsa numquam ratione quas soluta sunt tempora laborum corporis
+            possimus consequatur molestias magni nihil. We are dedicated to
+            providing the best computer hardware solutions.
+          </p>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">
+            <i class="bi bi-star-fill me-2 text-warning"></i>Our Mission
+          </h5>
+          <p class="card-text">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum
+            itaque dignissimos rerum molestiae aspernatur at odit, dolore, totam
+            reprehenderit omnis, exercitationem sunt ad? A nihil tempore harum.
+            Eaque, dolorum corporis. We strive to deliver excellence in every
+            product and service.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm text-center">
+        <div class="card-body">
+          <i
+            class="bi bi-lightning-charge text-success mb-3"
+            style="font-size: 2rem"
+          ></i>
+          <h5 class="card-title">High Performance</h5>
+          <p class="card-text text-muted">
+            Top-tier hardware engineered for speed and reliability
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm text-center">
+        <div class="card-body">
+          <i
+            class="bi bi-check-circle text-primary mb-3"
+            style="font-size: 2rem"
+          ></i>
+          <h5 class="card-title">Quality Assured</h5>
+          <p class="card-text text-muted">
+            Every product is tested and verified for quality
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm text-center">
+        <div class="card-body">
+          <i class="bi bi-headset text-info mb-3" style="font-size: 2rem"></i>
+          <h5 class="card-title">Expert Support</h5>
+          <p class="card-text text-muted">
+            Dedicated team ready to help with your questions
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div class="text-center">
+    <a href="{% url 'browse' %}" class="btn btn-primary btn-lg">
+      <i class="bi bi-shop me-2"></i>Start Shopping Now
+    </a>
+  </div>
+</div>
 
 {% endblock %}
