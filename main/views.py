@@ -13,6 +13,8 @@ from django.views.generic import ListView, DetailView
 from django.db.models import Q
 import stripe
 from django.core.mail import send_mail
+from datetime import datetime, timedelta
+from collections import defaultdict
 
 
 # Create your views here.
@@ -453,8 +455,6 @@ def place_order(request):
         )
         return redirect(checkout_session.url, code=303)
 
-
-
     return redirect("cart_view")
 
 
@@ -722,10 +722,6 @@ def thank_you(request, order_id):
 def customer_orders(request):
     orders = Order.objects.filter(user_id=request.user).order_by("-date_placed")
 
-    context = {
-        "orders": orders,
-    }
-
     return render(request, "orders.html", {"orders": orders})
 
 
@@ -741,3 +737,69 @@ def customer_order_detail(request, order_id):
             "items": items,
         },
     )
+
+
+def analytics(request):
+
+    today = datetime.today().date()
+    start_date = today - timedelta(days=6)
+
+    date_list = []
+    day = start_date
+    while day <= today:
+        date_list.append(d)
+        day = day + timedelta(days=1)
+
+    revenue_by_day = {}
+    quantity_by_day = {}
+
+    for date in date_list:
+        revenue_by_day[date] = 0
+        quantity_by_day[date] = 0
+
+    order_details = Order_Detail.objects.filter(
+        order_id__status__in=["p", "t", "d"],
+        order_id__date_placed__date__gte=start_date,
+        order_id__date_placed__date__lte=today,
+    )
+
+    for item in order_details:
+        order_day = item.order_id.date_placed.date()
+        revenue_by_day[order_day] = revenue_by_day[order_day] + item.order_cost
+        quantity_by_day[order_day] = quantity_by_day[order_day] + item.quantity
+
+    date_labels = []
+    revenue_data = []
+    quantity_data = []
+
+    for date in date_list:
+        date_labels.append(date.strftime("%b %d"))
+        revenue_data.append(revenue_by_day[date])
+        quantity_data.append(quantity_by_day[date])
+
+    category_labels = []
+    category_values = []
+
+    categories = Category.objects.all()
+    for category in categories:
+        total = 0
+        products = Product.objects.filter(category=category)
+        for p in products:
+            item_details = Order_Detail.objects.filter(
+                product_id=p, order_id__status__in=["p", "t", "d"]
+            )
+            for detail in item_details:
+                total = total + detail.order_cost
+
+        category_labels.append(category.name)
+        category_values.append(total)
+
+    context = {
+        "date_labels": date_labels,
+        "revenue_data": revenue_data,
+        "quantity_data": quantity_data,
+        "category_labels": category_labels,
+        "category_values": category_values,
+    }
+
+    return render(request, "analytical_dashboard.html", context)

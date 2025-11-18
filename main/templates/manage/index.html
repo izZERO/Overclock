@@ -1,1 +1,127 @@
-{% extends 'manage_base.html' %} {% block content %} {% endblock %}
+{% extends "manage_base.html" %} {% load static %} {% block content %}
+<div class="container my-4">
+  <h1 class="mb-4">
+    <i class="bi bi-graph-up-arrow me-2"></i>Analytical Dashboard
+  </h1>
+
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Weekly Revenue (USD)</h5>
+          <small class="text-muted">Total profit in goods sold per day</small>
+        </div>
+        <div class="card-body">
+          <canvas id="revenueChart" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Weekly Quantity Sold</h5>
+          <small class="text-muted">Total units sold per day</small>
+        </div>
+        <div class="card-body">
+          <canvas id="quantityChart" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Sales by Product Category</h5>
+          <small class="text-muted">Total revenue per category</small>
+        </div>
+        <div class="card-body">
+          <canvas id="categoryChart" height="150"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+  // safe to print the data raw
+  const dateLabels = {{ date_labels|safe }};
+  const revenueData = {{ revenue_data|safe }};
+  const quantityData = {{ quantity_data|safe }};
+  const categoryLabels = {{ category_labels|safe }};
+  const categoryValues = {{ category_values|safe }};
+
+  // revenue line chart
+  const revContext = document.getElementById('revenueChart').getContext('2d');
+  const revenueChart = new Chart(revContext, {
+    type: 'line',
+    data: {
+      labels: dateLabels,
+      datasets: [{
+        label: 'Revenue (BHD)',
+        data: revenueData,
+        borderWidth: 2,
+        fill: false,
+        tension: 0.2
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  // qty line chart
+  const qtyContext = document.getElementById('quantityChart').getContext('2d');
+  const quantityChart = new Chart(qtyContext, {
+    type: 'line',
+    data: {
+      labels: dateLabels,
+      datasets: [{
+        label: 'Quantity Sold',
+        data: quantityData,
+        borderWidth: 2,
+        fill: false,
+        tension: 0.2
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  // sales by category bar chart
+  const catContext = document.getElementById('categoryChart').getContext('2d');
+  const categoryChart = new Chart(catContext, {
+    type: 'bar',
+    data: {
+      labels: categoryLabels,
+      datasets: [{
+        label: 'Sales ($USD)',
+        data: categoryValues,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      indexAxis: 'x',
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}
