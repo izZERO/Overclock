@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,6 +27,7 @@
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+    <script src="{% static 'isDarkmode.js' %}" defer></script>
   </head>
   <body>
     <header
@@ -40,7 +41,7 @@
           <img
             src="{% static 'images\Overclock-logo.png'%}"
             alt="Overclock-logo"
-            class="image-header"
+            class="image-header ms-3"
           />
         </a>
       </div>
@@ -63,10 +64,10 @@
 
         <div class="d-flex align-items-center justify-content-end gap-3">
           <a href="{% url 'cart_view' %}" class="ms-3">
-            <i class="bi bi-cart" style="font-size: 2rem"></i>
+            <i class="bi bi-cart text-info" style="font-size: 2rem"></i>
           </a>
           <a href="{%url 'wishlist_index'%}">
-            <i class="bi bi-bookmark-heart" style="font-size: 2rem"></i>
+            <i class="bi bi-bookmark-heart text-info" style="font-size: 2rem"></i>
           </a>
 
           <div class="dropdown">
@@ -75,7 +76,7 @@
               class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle"
               data-bs-toggle="dropdown"
             >
-              <i class="bi bi-gear" style="font-size: 2rem"></i>
+              <i class="bi bi-gear text-info" style="font-size: 2rem"></i>
             </a>
             <ul class="dropdown-menu dropdown-menu-end text-small shadow">
               <li>
@@ -89,6 +90,19 @@
                 >
               </li>
               <li><hr class="dropdown-divider" /></li>
+              <li>
+                <div class="form-check form-switch ms-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="darkmode-switch"
+                  />
+                  <label class="form-check-label" for="darkmode-switch"
+                    >Darkmode</label
+                  >
+                </div>
+              </li>
               <li>
                 <form action="{% url 'logout' %}" method="post">
                   {% csrf_token %}

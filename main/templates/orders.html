@@ -21,7 +21,7 @@
     {% for order in orders %}
     <div class="col-12 mb-4">
       <div class="card shadow-sm">
-        <div class="card-header bg-light">
+        <div class="card-header">
           <div class="row align-items-center">
             <div class="col-md-3">
               <small class="text-muted">Order ID</small>
@@ -70,7 +70,8 @@
               </h6>
               <p class="mb-1">Address: {{ order.shipping_address }}</p>
               <p class="mb-0">
-                <i class="bi bi-telephone me-2"></i>Phone Number: {{ user.profile.phone }}
+                <i class="bi bi-telephone me-2"></i>Phone Number: {{
+                user.profile.phone }}
               </p>
             </div>
             <div class="col-md-4 text-end">
