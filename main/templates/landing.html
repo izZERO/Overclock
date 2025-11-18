@@ -1,66 +1,177 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 
-<div
-  id="carouselExampleAutoplaying"
-  class="carousel slide"
-  data-bs-ride="carousel"
->
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img
-        src="{% static 'images\pc-build-1.png'%}"
-        class="carousel-img"
-        alt="..."
-      />
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Custom Computers built by you!</h5>
-        <p>
-          Browse through our latest and most advanced products, and assemble
-          your most powerful rig!
-        </p>
+<div class="position-relative">
+  <div
+    id="carouselExampleAutoplaying"
+    class="carousel slide carousel-fade"
+    data-bs-ride="carousel"
+  >
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img
+          src="{% static 'images/pc-build-1.png' %}"
+          class="d-block w-100"
+          alt="Custom Computers"
+          style="height: 500px; object-fit: cover; filter: brightness(0.7)"
+        />
+        <div class="carousel-caption d-none d-md-block">
+          <h1 class="display-4 fw-bold mb-3">Custom Computers Built by You!</h1>
+          <p class="lead">
+            Browse through our latest and most advanced products, and assemble
+            your most powerful rig!
+          </p>
+          <a href="{% url 'browse' %}" class="btn btn-primary btn-lg mt-3">
+            <i class="bi bi-shop me-2"></i>Start Building
+          </a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img
+          src="{% static 'images/pc-build-2.png' %}"
+          class="d-block w-100"
+          alt="Dream Setups"
+          style="height: 500px; object-fit: cover; filter: brightness(0.7)"
+        />
+        <div class="carousel-caption d-none d-md-block">
+          <h1 class="display-4 fw-bold mb-3">
+            Dream Setups Within Your Grasp!
+          </h1>
+          <p class="lead">Dominate the arena with your powerhouse.</p>
+          <a href="{% url 'browse' %}" class="btn btn-primary btn-lg mt-3">
+            <i class="bi bi-lightning-fill me-2"></i>Explore Now
+          </a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img
+          src="{% static 'images/pc-build-3.png' %}"
+          class="d-block w-100"
+          alt="Latest Products"
+          style="height: 500px; object-fit: cover; filter: brightness(0.7)"
+        />
+        <div class="carousel-caption d-none d-md-block">
+          <h1 class="display-4 fw-bold mb-3">
+            Latest Products, Latest Services!
+          </h1>
+          <p class="lead">
+            Need a component of any kind? You will find it here.
+          </p>
+          <a href="{% url 'browse' %}" class="btn btn-primary btn-lg mt-3">
+            <i class="bi bi-box-seam me-2"></i>Browse All
+          </a>
+        </div>
       </div>
     </div>
-    <div class="carousel-item">
-      <img
-        src="{% static 'images\pc-build-2.png'%}"
-        class="carousel-img"
-        alt="..."
-      />
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Dream setups within your grasp!</h5>
-        <p>Dominate the arena with your powerhouse.</p>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleAutoplaying"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleAutoplaying"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+<!-- Features Section -->
+<div class="container my-5">
+  <div class="text-center mb-5">
+    <h2 class="display-5 fw-bold mb-3">
+      <i class="bi bi-stars me-2"></i>Welcome to Overclock!
+      <i class="bi bi-stars me-2"></i>
+    </h2>
+    <p class="lead text-muted">
+      Premium hardware, exceptional service, unbeatable prices
+    </p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-3">
+      <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i
+            class="bi bi-lightning-charge text-success mb-3"
+            style="font-size: 2.5rem"
+          ></i>
+          <h5 class="card-title">High Performance</h5>
+          <p class="card-text text-muted">
+            Top-tier components engineered for speed and reliability
+          </p>
+        </div>
       </div>
     </div>
-    <div class="carousel-item">
-      <img
-        src="{% static 'images\pc-build-3.png'%}"
-        class="carousel-img"
-        alt="..."
-      />
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Latest products, latest services!</h5>
-        <p>Need a component of any kind? you will find it here.</p>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i
+            class="bi bi-shield-check text-primary mb-3"
+            style="font-size: 2.5rem"
+          ></i>
+          <h5 class="card-title">Quality Assured</h5>
+          <p class="card-text text-muted">
+            Every product tested and verified for quality
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i class="bi bi-truck text-info mb-3" style="font-size: 2.5rem"></i>
+          <h5 class="card-title">Fast Delivery</h5>
+          <p class="card-text text-muted">
+            Quick and reliable shipping to your doorstep
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+      <div class="card h-100 shadow-sm border-0 text-center">
+        <div class="card-body">
+          <i
+            class="bi bi-headset text-warning mb-3"
+            style="font-size: 2.5rem"
+          ></i>
+          <h5 class="card-title">Expert Support</h5>
+          <p class="card-text text-muted">
+            Dedicated team ready to help you 24/7
+          </p>
+        </div>
       </div>
     </div>
   </div>
-  <button
-    class="carousel-control-prev"
-    type="button"
-    data-bs-target="#carouselExampleAutoplaying"
-    data-bs-slide="prev"
-  >
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button
-    class="carousel-control-next"
-    type="button"
-    data-bs-target="#carouselExampleAutoplaying"
-    data-bs-slide="next"
-  >
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
+</div>
+
+<!-- Call to Action Section -->
+<div class="bg-body-tertiary py-5 rounded">
+  <div class="container text-center">
+    <h2 class="display-5 fw-bold mb-3">Ready to Build Your Dream Setup?</h2>
+    <p class="lead text-muted mb-4">
+      Explore our extensive catalog of high-performance components and
+      accessories
+    </p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      <a href="{% url 'browse' %}" class="btn btn-primary btn-lg">
+        <i class="bi bi-shop me-2"></i>Shop Now
+      </a>
+      <a href="{% url 'about' %}" class="btn btn-outline-primary btn-lg">
+        <i class="bi bi-info-circle me-2"></i>Learn More
+      </a>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
