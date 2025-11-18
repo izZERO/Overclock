@@ -879,4 +879,3 @@ Remember: Your primary goal is to help customers navigate OVERCLOCK and make inf
         response = chat.send_message(user_message)
         bot_reply = response.text
         return JsonResponse({"reply": bot_reply})
-    return render(request, "chat.html")
