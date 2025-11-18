@@ -2,13 +2,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="container my-4">
   <h1 class="mb-4">
-    <i class="bi bi-graph-up-arrow me-2"></i>Analytical Dashboard
+    <i class="bi bi-graph-up-arrow me-3 h1"></i>Analytical Dashboard
   </h1>
 
   <div class="row mb-4">
     <div class="col-md-6">
       <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
+        <div class="card-header">
           <h5 class="mb-0">Weekly Revenue (USD)</h5>
           <small class="text-muted">Total profit in goods sold per day</small>
         </div>
@@ -20,7 +20,7 @@
 
     <div class="col-md-6">
       <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
+        <div class="card-header">
           <h5 class="mb-0">Weekly Quantity Sold</h5>
           <small class="text-muted">Total units sold per day</small>
         </div>
@@ -34,7 +34,7 @@
   <div class="row mb-4">
     <div class="col-md-12">
       <div class="card shadow-sm">
-        <div class="card-header bg-light">
+        <div class="card-header">
           <h5 class="mb-0">Sales by Product Category</h5>
           <small class="text-muted">Total revenue per category</small>
         </div>
@@ -61,72 +61,181 @@
   console.log("categoryLabels:", categoryLabels);
   console.log("categoryValues:", categoryValues);
 
-  // revenue line chart
-  const revContext = document.getElementById('revenueChart').getContext('2d');
-  const revenueChart = new Chart(revContext, {
-    type: 'line',
-    data: {
-      labels: dateLabels,
-      datasets: [{
-        label: 'Revenue (BHD)',
-        data: revenueData,
-        borderWidth: 2,
-        fill: false,
-        tension: 0.2
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
+  let revenueChart, quantityChart, categoryChart;
+
+  function getThemeColors() {
+    const isDarkMode = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+    return {
+      textColor: isDarkMode ? '#e9ecef' : '#212529',
+      gridColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+      borderColor1: isDarkMode ? 'rgba(99, 102, 241, 1)' : 'rgba(54, 162, 235, 1)',
+      backgroundColor1: isDarkMode ? 'rgba(99, 102, 241, 0.2)' : 'rgba(54, 162, 235, 0.2)',
+      borderColor2: isDarkMode ? 'rgba(139, 92, 246, 1)' : 'rgba(75, 192, 192, 1)',
+      backgroundColor2: isDarkMode ? 'rgba(139, 92, 246, 0.2)' : 'rgba(75, 192, 192, 0.2)'
+    };
+  }
+
+  function createCharts() {
+    const colors = getThemeColors();
+
+    // Destroy existing charts if they exist
+    if (revenueChart) revenueChart.destroy();
+    if (quantityChart) quantityChart.destroy();
+    if (categoryChart) categoryChart.destroy();
+
+    // revenue line chart
+    const revContext = document.getElementById('revenueChart').getContext('2d');
+    revenueChart = new Chart(revContext, {
+      type: 'line',
+      data: {
+        labels: dateLabels,
+        datasets: [{
+          label: 'Revenue (BHD)',
+          data: revenueData,
+          borderColor: colors.borderColor1,
+          backgroundColor: colors.backgroundColor1,
+          borderWidth: 2,
+          fill: false,
+          tension: 0.2
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: colors.textColor
+            },
+            grid: {
+              color: colors.gridColor
+            }
+          },
+          x: {
+            ticks: {
+              color: colors.textColor
+            },
+            grid: {
+              color: colors.gridColor
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: colors.textColor
+            }
+          }
         }
       }
-    }
+    });
+
+    // qty line chart
+    const qtyContext = document.getElementById('quantityChart').getContext('2d');
+    quantityChart = new Chart(qtyContext, {
+      type: 'line',
+      data: {
+        labels: dateLabels,
+        datasets: [{
+          label: 'Quantity Sold',
+          data: quantityData,
+          borderColor: colors.borderColor2,
+          backgroundColor: colors.backgroundColor2,
+          borderWidth: 2,
+          fill: false,
+          tension: 0.2
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: colors.textColor
+            },
+            grid: {
+              color: colors.gridColor
+            }
+          },
+          x: {
+            ticks: {
+              color: colors.textColor
+            },
+            grid: {
+              color: colors.gridColor
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: colors.textColor
+            }
+          }
+        }
+      }
+    });
+
+    // sales by category bar chart
+    const catContext = document.getElementById('categoryChart').getContext('2d');
+    categoryChart = new Chart(catContext, {
+      type: 'bar',
+      data: {
+        labels: categoryLabels,
+        datasets: [{
+          label: 'Sales ($USD)',
+          data: categoryValues,
+          borderColor: colors.borderColor1,
+          backgroundColor: colors.backgroundColor1,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        indexAxis: 'x',
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: colors.textColor
+            },
+            grid: {
+              color: colors.gridColor
+            }
+          },
+          x: {
+            ticks: {
+              color: colors.textColor
+            },
+            grid: {
+              color: colors.gridColor
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: colors.textColor
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Create charts initially
+  createCharts();
+
+  // Listen for theme changes and recreate charts
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'data-bs-theme') {
+        createCharts();
+      }
+    });
   });
 
-  // qty line chart
-  const qtyContext = document.getElementById('quantityChart').getContext('2d');
-  const quantityChart = new Chart(qtyContext, {
-    type: 'line',
-    data: {
-      labels: dateLabels,
-      datasets: [{
-        label: 'Quantity Sold',
-        data: quantityData,
-        borderWidth: 2,
-        fill: false,
-        tension: 0.2
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-
-  // sales by category bar chart
-  const catContext = document.getElementById('categoryChart').getContext('2d');
-  const categoryChart = new Chart(catContext, {
-    type: 'bar',
-    data: {
-      labels: categoryLabels,
-      datasets: [{
-        label: 'Sales ($USD)',
-        data: categoryValues,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      indexAxis: 'x',
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-bs-theme']
   });
 </script>
 
