@@ -1,25 +1,37 @@
+from datetime import datetime, timedelta
+import stripe
+from django.conf import settings
+from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.conf import settings
-from .models import Profile, Product, Category, Order, Order_Detail, Wishlist
-from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm, UpdateStatus
-from django.views import View
-from django.contrib import messages
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
+from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic import ListView, DetailView
-from django.db.models import Q
-import stripe
-from django.core.mail import send_mail
-from datetime import datetime, timedelta
-from collections import defaultdict
+
+from .forms import (
+    RegisterForm,
+    UpdateUserForm,
+    UpdateProfileForm,
+    UpdateStatus,
+)
+from .models import (
+    Profile,
+    Product,
+    Category,
+    Order,
+    Order_Detail,
+    Wishlist,
+)
 
 
-# Create your views here.
 def landing(request):
     return render(request, "landing.html")
+
+
+def about(request):
+    return render(request, "about.html")
 
 
 def browse(request):
@@ -43,7 +55,7 @@ def customer_product_detail(request, product_id):
 
     wishlist = None
     if request.user.is_authenticated:
-        wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+        wishlist = Wishlist.objects.get_or_create(user=request.user)
 
     return render(
         request,
@@ -53,10 +65,6 @@ def customer_product_detail(request, product_id):
             "wishlist": wishlist,
         },
     )
-
-
-def about(request):
-    return render(request, "about.html")
 
 
 def signup(request):
@@ -107,7 +115,7 @@ def profile_view(request):
         order.total_cost for order in Order.objects.filter(user_id=request.user)
     )
 
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    wishlist = Wishlist.objects.get_or_create(user=request.user)
     wishlist_items = wishlist.products.all()[:4]
     wishlist_count = wishlist.products.count()
 
@@ -120,108 +128,6 @@ def profile_view(request):
     }
 
     return render(request, "user/profile.html", context)
-
-
-# Admin Views
-
-
-def manage_index(request):
-    return render(request, "manage/index.html")
-
-
-class ProductList(ListView):
-    model = Product
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        search_query = self.request.GET.get("search")
-
-        if search_query:
-            queryset = queryset.filter(
-                Q(name__icontains=search_query)
-                | Q(description__icontains=search_query)
-                | Q(category__name__icontains=search_query)
-            )
-
-        return queryset
-
-
-class ProductDetail(DetailView):
-    model = Product
-
-
-class ProductCreate(CreateView):
-    model = Product
-    fields = [
-        "name",
-        "description",
-        "image",
-        "price",
-        "price_id",
-        "weight",
-        "stock",
-        "category",
-    ]
-
-    def form_valid(self, form):
-        form.instance.added_by = self.request.user
-        return super().form_valid(form)
-
-
-class ProductUpdate(UpdateView):
-    model = Product
-    fields = [
-        "name",
-        "description",
-        "image",
-        "price",
-        "price_id",
-        "weight",
-        "stock",
-        "category",
-    ]
-
-    def form_valid(self, form):
-        form.instance.added_by = self.request.user
-        return super().form_valid(form)
-
-
-class ProductDelete(DeleteView):
-    model = Product
-    success_url = "/manage/products/"
-
-
-class CategoryList(ListView):
-    model = Category
-
-
-class CategoryCreate(CreateView):
-    model = Category
-    fields = ["name"]
-
-    def form_valid(self, form):
-        form.instance.added_by = self.request.user
-        return super().form_valid(form)
-
-
-class CategoryUpdate(UpdateView):
-    model = Category
-    fields = [
-        "name",
-    ]
-
-    def form_valid(self, form):
-        form.instance.added_by = self.request.user
-        return super().form_valid(form)
-
-
-class CategoryDelete(DeleteView):
-    model = Category
-    success_url = "/manage/categories/"
-
-
-class OrderList(ListView):
-    model = Order
 
 
 def order_detail(request, order_id):
@@ -250,7 +156,7 @@ def order_detail(request, order_id):
 
 #  User Views
 def wishlist_index(request):
-    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    wishlist = Wishlist.objects.get_or_create(user=request.user)
     products = wishlist.products.all()
 
     return render(
@@ -276,7 +182,7 @@ def unassoc_product(request, wishlist_id, product_id):
 
 
 def cart_view(request):
-    cart, created = Order.objects.get_or_create(
+    cart = Order.objects.get_or_create(
         user_id=request.user,
         status="c",
         defaults={
@@ -304,7 +210,7 @@ def add_to_cart(request, product_id):
     if product.stock <= 0:
         return redirect("customer_product_detail", product_id=product.id)
 
-    cart, created = Order.objects.get_or_create(
+    cart = Order.objects.get_or_create(
         user_id=request.user,
         status="c",
         defaults={
@@ -739,7 +645,15 @@ def customer_order_detail(request, order_id):
     )
 
 
-def analytics(request):
+def analytical_dashboard(request):
+
+    date_labels = []
+    revenue_data = []
+    quantity_data = []
+    category_labels = []
+    category_values = []
+    revenue_by_day = {}
+    quantity_by_day = {}
 
     today = datetime.today().date()
     start_date = today - timedelta(days=6)
@@ -747,11 +661,8 @@ def analytics(request):
     date_list = []
     day = start_date
     while day <= today:
-        date_list.append(d)
+        date_list.append(day)
         day = day + timedelta(days=1)
-
-    revenue_by_day = {}
-    quantity_by_day = {}
 
     for date in date_list:
         revenue_by_day[date] = 0
@@ -768,25 +679,18 @@ def analytics(request):
         revenue_by_day[order_day] = revenue_by_day[order_day] + item.order_cost
         quantity_by_day[order_day] = quantity_by_day[order_day] + item.quantity
 
-    date_labels = []
-    revenue_data = []
-    quantity_data = []
-
     for date in date_list:
         date_labels.append(date.strftime("%b %d"))
         revenue_data.append(revenue_by_day[date])
         quantity_data.append(quantity_by_day[date])
 
-    category_labels = []
-    category_values = []
-
     categories = Category.objects.all()
     for category in categories:
         total = 0
         products = Product.objects.filter(category=category)
-        for p in products:
+        for product in products:
             item_details = Order_Detail.objects.filter(
-                product_id=p, order_id__status__in=["p", "t", "d"]
+                product_id=product, order_id__status__in=["p", "t", "d"]
             )
             for detail in item_details:
                 total = total + detail.order_cost
@@ -802,4 +706,99 @@ def analytics(request):
         "category_values": category_values,
     }
 
-    return render(request, "analytical_dashboard.html", context)
+    return render(request, "main/analytical_dashboard.html", context)
+
+
+class ProductList(ListView):
+    model = Product
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search_query = self.request.GET.get("search")
+
+        if search_query:
+            queryset = queryset.filter(
+                Q(name__icontains=search_query)
+                | Q(description__icontains=search_query)
+                | Q(category__name__icontains=search_query)
+            )
+
+        return queryset
+
+
+class ProductDetail(DetailView):
+    model = Product
+
+
+class ProductCreate(CreateView):
+    model = Product
+    fields = [
+        "name",
+        "description",
+        "image",
+        "price",
+        "price_id",
+        "weight",
+        "stock",
+        "category",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class ProductUpdate(UpdateView):
+    model = Product
+    fields = [
+        "name",
+        "description",
+        "image",
+        "price",
+        "price_id",
+        "weight",
+        "stock",
+        "category",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class ProductDelete(DeleteView):
+    model = Product
+    success_url = "/manage/products/"
+
+
+class CategoryList(ListView):
+    model = Category
+
+
+class CategoryCreate(CreateView):
+    model = Category
+    fields = ["name"]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class CategoryUpdate(UpdateView):
+    model = Category
+    fields = [
+        "name",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class CategoryDelete(DeleteView):
+    model = Category
+    success_url = "/manage/categories/"
+
+
+class OrderList(ListView):
+    model = Order

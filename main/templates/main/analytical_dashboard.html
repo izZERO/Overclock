@@ -1,4 +1,5 @@
 {% extends "manage_base.html" %} {% load static %} {% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="container my-4">
   <h1 class="mb-4">
     <i class="bi bi-graph-up-arrow me-2"></i>Analytical Dashboard
@@ -45,15 +46,20 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 
-  // safe to print the data raw
+  // safe = jinja filter, Its purpose is to tell the templating engine that the content of the data is already safe and should be inserted into the HTML without any additional escaping of special characters (like quotes or brackets) that might otherwise cause SyntaxError
   const dateLabels = {{ date_labels|safe }};
   const revenueData = {{ revenue_data|safe }};
   const quantityData = {{ quantity_data|safe }};
   const categoryLabels = {{ category_labels|safe }};
   const categoryValues = {{ category_values|safe }};
+
+  console.log("dateLabels:", dateLabels);
+  console.log("revenueData:", revenueData);
+  console.log("quantityData:", quantityData);
+  console.log("categoryLabels:", categoryLabels);
+  console.log("categoryValues:", categoryValues);
 
   // revenue line chart
   const revContext = document.getElementById('revenueChart').getContext('2d');
