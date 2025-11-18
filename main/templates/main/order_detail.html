@@ -1,122 +1,179 @@
 {% extends 'manage_base.html' %} {% load static %} {% block content %}
-<div class="card mb-3 container-fluid">
-  <div class="row g-0">
+
+<div class="container my-4">
+  <h1 class="mb-4">
+    <i class="bi bi-receipt-cutoff me-3 h1"></i>Order Details
+  </h1>
+
+  <div class="row mb-4">
     <div class="col-md-8">
-      <div class="card-body">
-        <h5 class="card-title">Order ID: {{ order.id }}</h5>
+      <div class="card shadow-sm mb-3">
+        <div class="card-header">
+          <h5 class="mb-0">Order ID: {{ order.id }}</h5>
+          <small class="text-muted">Details and shipping information</small>
+        </div>
+        <div class="card-body">
+          <div class="mb-3 d-flex flex-wrap gap-2">
+            <span class="badge rounded-pill text-bg-primary">
+              <i class="bi bi-person-circle me-2"></i>
+              Placed by: {{ order.user_id.username }}
+            </span>
 
-        <span class="badge rounded-pill text-bg-primary">
-          <i class="bi bi-person-circle me-2"></i>
-          Placed by: {{ order.user_id.username }}
-        </span>
+            <span class="badge rounded-pill text-bg-primary">
+              <i class="bi bi-currency-dollar me-2"></i>
+              Total: {{ order.total_cost }} BHD
+            </span>
 
-        <span class="badge rounded-pill text-bg-primary">
-          <i class="bi bi-currency-dollar me-2"></i>
-          Total: {{ order.total_cost }} BHD
-        </span>
+            <span class="badge rounded-pill text-bg-primary">
+              <i class="bi bi-house-fill me-2"></i>
+              {{ order.shipping_address }}
+            </span>
 
-        <span class="badge rounded-pill text-bg-primary">
-          <i class="bi bi-house-fill me-2"></i>
-          {{ order.shipping_address }}
-        </span>
+            <span class="badge rounded-pill text-bg-primary">
+              <i class="bi bi-calendar-date-fill me-2"></i>
+              {{ order.date_placed }}
+            </span>
+          </div>
 
-        <span class="badge rounded-pill text-bg-primary">
-          <i class="bi bi-calendar-date-fill me-2"></i>
-          {{ order.date_placed }}
-        </span>
+          <p class="card-text">
+            Status: {% if order.status == 'c' %}
+            <span class="badge bg-secondary">
+              <i class="bi bi-cart me-1"></i>Cart
+            </span>
+            {% elif order.status == 'p' %}
+            <span class="badge bg-info">
+              <i class="bi bi-check-circle me-1"></i>Placed
+            </span>
+            {% elif order.status == 't' %}
+            <span class="badge bg-warning text-dark">
+              <i class="bi bi-truck me-1"></i>In Transit
+            </span>
+            {% elif order.status == 'd' %}
+            <span class="badge bg-success">
+              <i class="bi bi-box-seam me-1"></i>Delivered
+            </span>
+            {% else %}
+            <strong>{{ order.get_status_display }}</strong>
+            {% endif %}
+          </p>
 
-        <p class="card-text mt-4">Status: {{ order.get_status_display }}</p>
+          <div class="mt-3">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              Update Status
+            </button>
+          </div>
 
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-        >
-          Update Status
-        </button>
-
-        <div
-          class="modal fade"
-          id="exampleModal"
-          tabindex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">
-                  Update Status
-                </h1>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                ></button>
-              </div>
-              <div class="modal-body">
-                <form method="POST">
-                  {% csrf_token %} {{ form.as_p }}
-                  <button value="submit" name="Submit" type="submit">
-                    Submit
+          <!-- Modal -->
+          <div
+            class="modal fade"
+            id="exampleModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">
+                    Update Status
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <form method="POST">
+                    {% csrf_token %} {{ form.as_p }}
+                    <button
+                      class="btn btn-primary"
+                      value="submit"
+                      name="Submit"
+                      type="submit"
+                    >
+                      Submit
+                    </button>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
                   </button>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button type="button" class="btn btn-primary">
-                  Save changes
-                </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header">
+          <h6 class="mb-0">Summary</h6>
+        </div>
+        <div class="card-body">
+          <p class="mb-1"><strong>Total:</strong> {{ order.total_cost }} BHD</p>
+          <p class="mb-1"><strong>Items:</strong> {{ items|length }}</p>
+          <p class="mb-0"><strong>Placed:</strong> {{ order.date_placed }}</p>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="card container-fluid">
-  <div class="card-body">
-    <h5 class="card-title mb-3">Order Items</h5>
-
-    <table class="table table-bordered align-middle text-center">
-      <thead>
-        <tr>
-          <th>Image</th>
-          <th>Product</th>
-          <th>Price (BHD)</th>
-          <th>Quantity</th>
-          <th>Line Total (BHD)</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in items %}
-        <tr>
-          <td style="width: 120px">
-            <img
-              src="{% static item.product_id.image|cut:'main/static/' %}"
-              alt="{{ item.product_id.name }}"
-              style="width: 100px; height: 80px; object-fit: cover"
-              class="rounded"
-            />
-          </td>
-          <td>{{ item.product_id.name }}</td>
-          <td>{{ item.product_id.price }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>{{ item.order_cost }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h5 class="mb-0">Order Items</h5>
+          <small class="text-muted">Products included in this order</small>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered align-middle text-center mb-0">
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Product</th>
+                  <th>Price (BHD)</th>
+                  <th>Quantity</th>
+                  <th>Line Total (BHD)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in items %}
+                <tr>
+                  <td style="width: 120px">
+                    <img
+                      src="{% static item.product_id.image|cut:'main/static/' %}"
+                      alt="{{ item.product_id.name }}"
+                      style="width: 100px; height: 80px; object-fit: cover"
+                      class="rounded"
+                    />
+                  </td>
+                  <td class="text-start">{{ item.product_id.name }}</td>
+                  <td>{{ item.product_id.price }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>{{ item.order_cost }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

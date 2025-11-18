@@ -1,15 +1,75 @@
-{% extends 'manage_base.html' %} {% block content %}
-<div style="display: flex; justify-content: space-between">
-  <h1>Orders List</h1>
-</div>
-{% for order in order_list %}
-<div class="card" style="width: 58rem">
-  <div class="card-body">
-    <a href="{%url 'orders_detail' order.id %}">
-      <h5 class="card-title">
-        Order id: {{order.id}} - Placed by {{order.user_id.username }}
-      </h5>
-    </a>
+{% extends 'manage_base.html' %} {% load static %} {% block content %}
+
+<div class="container my-4">
+  <h1 class="mb-4"><i class="bi bi-card-list me-3 h1"></i>Orders List</h1>
+
+  <div class="row">
+    <div class="col-12">
+      {% if order_list %}
+      <div class="list-group">
+        {% for order in order_list %}
+        <div class="card shadow-sm mb-3">
+          <div
+            class="card-header d-flex justify-content-between align-items-center"
+          >
+            <div>
+              <a
+                href="{% url 'orders_detail' order.id %}"
+                class="h6 mb-0 text-decoration-none"
+              >
+                Order #{{ order.id }}
+              </a>
+              <div class="small text-muted">
+                Placed by {{ order.user_id.username }}
+              </div>
+            </div>
+            <div class="text-end">
+              <small class="text-muted">{{ order.date_placed }}</small>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="mb-0">
+                  <strong>Total:</strong> {{ order.total_cost }} BHD
+                  <span class="ms-2">
+                    {% if order.status == 'c' %}
+                    <span class="badge bg-secondary">
+                      <i class="bi bi-cart me-1"></i>Cart
+                    </span>
+                    {% elif order.status == 'p' %}
+                    <span class="badge bg-info">
+                      <i class="bi bi-check-circle me-1"></i>Placed
+                    </span>
+                    {% elif order.status == 't' %}
+                    <span class="badge bg-warning text-dark">
+                      <i class="bi bi-truck me-1"></i>In Transit
+                    </span>
+                    {% elif order.status == 'd' %}
+                    <span class="badge bg-success">
+                      <i class="bi bi-box-seam me-1"></i>Delivered
+                    </span>
+                    {% endif %}
+                  </span>
+                </p>
+              </div>
+              <div>
+                <a
+                  href="{% url 'orders_detail' order.id %}"
+                  class="btn btn-sm btn-outline-primary"
+                  >View</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="alert alert-info">No orders available.</div>
+      {% endif %}
+    </div>
   </div>
 </div>
-{% endfor %} {% endblock %}
+
+{% endblock %}
