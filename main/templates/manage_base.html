@@ -113,8 +113,6 @@
   </head>
 
   <body>
-
-
     <main class="flex-nowrap">
       <div
         class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary sidebar-fixed"
@@ -139,7 +137,7 @@
         <ul class="nav nav-pills flex-column mb-auto">
           <li>
             <a
-              href="{% url 'manage' %}"
+              href="{% url 'analytical_dashboard' %}"
               class="nav-link {% if request.resolver_match.url_name == 'manage' %}active{% else %}link-body-emphasis{% endif %}"
               style="font-size: large"
             >

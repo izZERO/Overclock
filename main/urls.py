@@ -2,8 +2,8 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    # Admin
-    path("manage/", views.manage_index, name="manage"),
+    # Admin Index
+    path("manage/dashboard", views.analytical_dashboard, name="analytical_dashboard"),
     # Admin Orders
     path("manage/orders/", views.OrderList.as_view(), name="orders_index"),
     path(
