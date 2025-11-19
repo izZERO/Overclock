@@ -42,6 +42,16 @@ def browse_category(request, category_id):
     )
 
 
+def browse_search(request):
+    search_query = request.GET.get("search")
+    products = Product.objects.filter(
+        Q(name__icontains=search_query)
+        | Q(description__icontains=search_query)
+        | Q(category__name__icontains=search_query)
+    )
+    return render(request, "browse_search.html", {"products": products})
+
+
 def customer_product_detail(request, product_id):
     product = Product.objects.get(id=product_id)
 
