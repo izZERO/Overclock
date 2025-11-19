@@ -218,6 +218,7 @@
             >Home</a
           >
         </li>
+        {% if user.profile.role == 'Admin' %}
         <li class="nav-item">
           <a
             href="{%url 'analytical_dashboard'%}"
@@ -225,6 +226,7 @@
             >Manage</a
           >
         </li>
+        {% endif %}
       </ul>
       <p class="text-center text-body-secondary">
         All Rights Reserved, &copy; 2025 Overclock &nbsp;

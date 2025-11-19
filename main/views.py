@@ -6,7 +6,7 @@ from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm, UpdateStatus
 from django.views import View
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
@@ -16,6 +16,27 @@ from datetime import datetime, timedelta
 import json
 from django.http import JsonResponse
 import google.generativeai as genai
+
+
+# Admin middleware
+# https://www.reddit.com/r/django/comments/mo19nw/restrict_access_to_views_based_on_users_role_and/
+# https://micropyramid.medium.com/custom-decorators-to-check-user-roles-and-permissions-in-django-ece6b8a98d9d
+def is_admin(user):
+    try:
+        profile = user.profile
+        return profile.role == "Admin"
+    except Profile.DoesNotExist:
+        return False
+
+
+admin_required = user_passes_test(lambda u: is_admin(u), login_url="manage/dashboard")
+
+
+class AdminRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if not is_admin(request.user):
+            return redirect("manage/dashboard")
+        return super().dispatch(request, *args, **kwargs)
 
 
 def landing(request):
@@ -637,6 +658,7 @@ def customer_order_detail(request, order_id):
     )
 
 
+@admin_required
 def analytical_dashboard(request):
 
     date_labels = []
@@ -701,7 +723,7 @@ def analytical_dashboard(request):
     return render(request, "main/analytical_dashboard.html", context)
 
 
-class ProductList(ListView):
+class ProductList(AdminRequiredMixin, ListView):
     model = Product
 
     def get_queryset(self):
@@ -718,29 +740,11 @@ class ProductList(ListView):
         return queryset
 
 
-class ProductDetail(DetailView):
+class ProductDetail(AdminRequiredMixin, DetailView):
     model = Product
 
 
-class ProductCreate(CreateView):
-    model = Product
-    fields = [
-        "name",
-        "description",
-        "image",
-        "price",
-        "price_id",
-        "weight",
-        "stock",
-        "category",
-    ]
-
-    def form_valid(self, form):
-        form.instance.added_by = self.request.user
-        return super().form_valid(form)
-
-
-class ProductUpdate(UpdateView):
+class ProductCreate(AdminRequiredMixin, CreateView):
     model = Product
     fields = [
         "name",
@@ -758,16 +762,34 @@ class ProductUpdate(UpdateView):
         return super().form_valid(form)
 
 
-class ProductDelete(DeleteView):
+class ProductUpdate(AdminRequiredMixin, UpdateView):
+    model = Product
+    fields = [
+        "name",
+        "description",
+        "image",
+        "price",
+        "price_id",
+        "weight",
+        "stock",
+        "category",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class ProductDelete(AdminRequiredMixin, DeleteView):
     model = Product
     success_url = "/manage/products/"
 
 
-class CategoryList(ListView):
+class CategoryList(AdminRequiredMixin, ListView):
     model = Category
 
 
-class CategoryCreate(CreateView):
+class CategoryCreate(AdminRequiredMixin, CreateView):
     model = Category
     fields = ["name"]
 
@@ -787,12 +809,23 @@ class CategoryUpdate(UpdateView):
         return super().form_valid(form)
 
 
-class CategoryDelete(DeleteView):
+class CategoryUpdate(AdminRequiredMixin, UpdateView):
+    model = Category
+    fields = [
+        "name",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class CategoryDelete(AdminRequiredMixin, DeleteView):
     model = Category
     success_url = "/manage/categories/"
 
 
-class OrderList(ListView):
+class OrderList(AdminRequiredMixin, ListView):
     model = Order
 
 

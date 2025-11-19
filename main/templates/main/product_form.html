@@ -1,15 +1,151 @@
-{% extends 'manage_base.html' %} {% block content %} {% if object %}
-<h1>Edit {{object.name}}</h1>
+{% extends 'manage_base.html' %} {% block content %} {% load static %}
+<style>
+  .container .category-form-table {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 0 0.75rem;
+    background: transparent;
+  }
+
+  .category-form-table th {
+    text-align: left;
+    vertical-align: middle;
+    padding: 0.6rem 0.8rem;
+    width: 220px;
+    color: #222;
+    font-weight: 600;
+    white-space: nowrap;
+    font-size: 0.95rem;
+  }
+
+  .category-form-table td {
+    padding: 0.25rem 0.8rem;
+    vertical-align: middle;
+  }
+
+  .category-form-table input[type="text"],
+  .category-form-table input[type="number"],
+  .category-form-table input[type="email"],
+  .category-form-table select,
+  .category-form-table textarea,
+  .category-form-table input[type="file"] {
+    width: 100%;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid #d6dbe0;
+    border-radius: 6px;
+    background: white;
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.02);
+    font-size: 0.95rem;
+    color: #111;
+  }
+
+  .category-form-table textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  .category-form-table .errorlist {
+    margin: 0.25rem 0 0;
+    color: #b00020;
+    font-size: 0.92rem;
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .category-submit {
+    display: inline-block;
+    margin-top: 1rem;
+    background: linear-gradient(180deg, #0d6efd, #0b5ed7);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(11, 92, 215, 0.12);
+  }
+
+  .category-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(11, 92, 215, 0.16);
+  }
+
+  @media (max-width: 600px) {
+    .category-form-table th {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.25rem;
+    }
+    .category-form-table td {
+      display: block;
+    }
+    .category-form-table {
+      border-spacing: 0.5rem 0.5rem;
+    }
+  }
+
+  [data-bs-theme="dark"] .container .category-form-table th {
+    color: #e6e6e6;
+  }
+
+  [data-bs-theme="dark"] .container .category-form-table td {
+    color: #d7dce0;
+  }
+
+  [data-bs-theme="dark"] .category-form-table input[type="text"],
+  [data-bs-theme="dark"] .category-form-table input[type="number"],
+  [data-bs-theme="dark"] .category-form-table input[type="email"],
+  [data-bs-theme="dark"] .category-form-table select,
+  [data-bs-theme="dark"] .category-form-table textarea,
+  [data-bs-theme="dark"] .category-form-table input[type="file"] {
+    background: #16181a;
+    border: 1px solid #35383b;
+    color: #e9eef6;
+    box-shadow: none;
+  }
+
+  [data-bs-theme="dark"] .category-form-table textarea {
+    background: #16181a;
+  }
+
+  [data-bs-theme="dark"] .category-form-table .errorlist {
+    color: #ff8a8a;
+  }
+
+  [data-bs-theme="dark"] .category-submit {
+    background: linear-gradient(180deg, #2b6cff, #1458d3);
+    box-shadow: 0 4px 12px rgba(20, 88, 211, 0.18);
+    color: white;
+  }
+
+  [data-bs-theme="dark"] .category-form-table input:focus,
+  [data-bs-theme="dark"] .category-form-table select:focus,
+  [data-bs-theme="dark"] .category-form-table textarea:focus {
+    outline: 2px solid rgba(88, 144, 255, 0.14);
+    outline-offset: 2px;
+  }
+</style>
+
+{% if object %}
+
+<h1 class="mb-1">
+  <i class="bi bi-pencil-square me-2 h1"></i>Edit {{ object.name }}
+</h1>
+<p class="text-muted">Update Product details</p>
 {% else %}
-<h1>Add Product</h1>
+
+<div>
+  <h1 class="mb-1"><i class="bi bi-plus-lg me-2 h1"></i>Add Product</h1>
+  <p class="text-muted">Fill in all the fields.</p>
+</div>
 {% endif %}
 
 <form action="" method="post" enctype="multipart/form-data">
   {% csrf_token %}
-  <table>
+  <table class="category-form-table">
     {{ form.as_table }}
   </table>
-  <input type="submit" value="Submit!" class="btn" />
+  <input type="submit" value="Submit!" class="btn category-submit" />
 </form>
 
 {% endblock %}

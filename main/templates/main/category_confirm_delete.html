@@ -1,10 +1,34 @@
-{% extends 'manage_base.html' %}
-{% block content %}
+{% extends 'manage_base.html' %} {% block content %} {% load static%}
+<style>
+  .category-submit {
+    display: inline-block;
+    margin-top: 1rem;
+    background: linear-gradient(180deg, #fd0d0d, #d70b0b);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(11, 92, 215, 0.12);
+  }
+  .category-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(11, 92, 215, 0.16);
+    color: white;
+  }
+
+  [data-bs-theme="dark"] .category-submit {
+    background: linear-gradient(180deg, #ff2b2b, #d31414);
+    box-shadow: 0 4px 12px rgba(20, 88, 211, 0.18);
+    color: white;
+  }
+</style>
 <h1>Delete Category</h1>
 <h4>Are you sure you want to delete {{object.name}}?</h4>
-  <form action="" method="POST">
-    {% csrf_token %}
-    <input type="submit" value="Yes - Delete!" class="btn">
-    <a href="{% url 'categories_index' %}">Cancel</a>
-  </form>
+<form action="" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Yes - Delete!" class="btn category-submit" />
+  <br />
+  <a href="{% url 'categories_index' %}" class="btn">Cancel</a>
+</form>
 {% endblock %}
