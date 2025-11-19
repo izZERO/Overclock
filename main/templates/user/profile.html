@@ -112,7 +112,7 @@
                   style="font-size: 2rem"
                 ></i>
                 <h3 class="mt-2 mb-0">{{ total_spent|floatformat:2 }}</h3>
-                <p class="text-muted small mb-0">Total Spent (BHD)</p>
+                <p class="text-muted small mb-0">Total Spent (USD)</p>
               </div>
             </div>
           </div>
@@ -164,7 +164,7 @@
             <tr>
               <td><strong>#{{ order.id }}</strong></td>
               <td>{{ order.date_placed|date:"M d, Y" }}</td>
-              <td><strong>{{ order.total_cost }} BHD</strong></td>
+              <td><strong>{{ order.total_cost }} USD</strong></td>
               <td>
                 {% if order.status == 'c' %}
                 <span class="badge bg-secondary">Cart</span>
@@ -230,7 +230,7 @@
             <div class="card-body">
               <h6 class="card-title">{{ product.name }}</h6>
               <p class="text-primary mb-0">
-                <strong>{{ product.price }} BHD</strong>
+                <strong>{{ product.price }} USD</strong>
               </p>
             </div>
           </div>

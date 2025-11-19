@@ -12,7 +12,7 @@
       <h5 class="card-title">Order Summary</h5>
       <p><strong>Order ID:</strong> {{ order.id }}</p>
       <p><strong>Date:</strong> {{ order.date_placed }}</p>
-      <p><strong>Total Cost:</strong> {{ order.total_cost }} BHD</p>
+      <p><strong>Total Cost:</strong> {{ order.total_cost }} USD</p>
       <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
       <p><strong>Phone:</strong> {{ user.profile.phone }}</p>
     </div>
@@ -45,9 +45,9 @@
               />
             </td>
             <td>{{ item.product_id.name }}</td>
-            <td>{{ item.product_id.price }} BHD</td>
+            <td>{{ item.product_id.price }} USD</td>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.order_cost }} BHD</td>
+            <td>{{ item.order_cost }} USD</td>
           </tr>
           {% endfor %}
         </tbody>
