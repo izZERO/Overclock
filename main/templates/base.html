@@ -204,6 +204,7 @@
                 id="user-input"
                 class="form-control"
                 placeholder="Type your message..."
+                onkeypress="if(event.key === 'Enter') sendMessage()"
               />
               <button
                 class="btn btn-primary"
