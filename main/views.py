@@ -6,7 +6,7 @@ from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm, UpdateStatus
 from django.views import View
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
@@ -16,6 +16,27 @@ from datetime import datetime, timedelta
 import json
 from django.http import JsonResponse
 import google.generativeai as genai
+
+
+# Admin middleware
+# https://www.reddit.com/r/django/comments/mo19nw/restrict_access_to_views_based_on_users_role_and/
+# https://micropyramid.medium.com/custom-decorators-to-check-user-roles-and-permissions-in-django-ece6b8a98d9d
+def is_admin(user):
+    try:
+        profile = user.profile
+        return profile.role == "Admin"
+    except Profile.DoesNotExist:
+        return False
+
+
+admin_required = user_passes_test(lambda u: is_admin(u), login_url="manage/dashboard")
+
+
+class AdminRequiredMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if not is_admin(request.user):
+            return redirect("manage/dashboard")
+        return super().dispatch(request, *args, **kwargs)
 
 
 def landing(request):
@@ -85,6 +106,7 @@ def signup(request):
 
 
 # code from https://dev.to/earthcomfy/django-update-user-profile-33ho
+@login_required
 def profile(request):
     if request.method == "POST":
         user_form = UpdateUserForm(request.POST, instance=request.user)
@@ -105,6 +127,7 @@ def profile(request):
     )
 
 
+@login_required
 def profile_view(request):
     recent_orders = Order.objects.filter(user_id=request.user).order_by("-date_placed")[
         :5
@@ -132,6 +155,7 @@ def profile_view(request):
     return render(request, "user/profile.html", context)
 
 
+@login_required
 def order_detail(request, order_id):
     order = Order.objects.get(id=order_id)
     items = Order_Detail.objects.filter(order_id=order)
@@ -156,7 +180,7 @@ def order_detail(request, order_id):
     )
 
 
-#  User Views
+@login_required
 def wishlist_index(request):
     wishlist, created = Wishlist.objects.get_or_create(user=request.user)
     products = wishlist.products.all()
@@ -171,18 +195,21 @@ def wishlist_index(request):
     )
 
 
+@login_required
 def assoc_product(request, wishlist_id, product_id):
     wishlist = Wishlist.objects.get(id=wishlist_id, user=request.user)
     wishlist.products.add(product_id)
     return redirect("wishlist_index")
 
 
+@login_required
 def unassoc_product(request, wishlist_id, product_id):
     wishlist = Wishlist.objects.get(id=wishlist_id, user=request.user)
     wishlist.products.remove(product_id)
     return redirect("wishlist_index")
 
 
+@login_required
 def cart_view(request):
     cart, created = Order.objects.get_or_create(
         user_id=request.user,
@@ -205,6 +232,7 @@ def cart_view(request):
     )
 
 
+@login_required
 def add_to_cart(request, product_id):
 
     product = Product.objects.get(id=product_id)
@@ -263,6 +291,7 @@ def add_to_cart(request, product_id):
     return redirect("cart_view")
 
 
+@login_required
 def update_cart_item(request, item_id):
     item = Order_Detail.objects.get(id=item_id)
     cart = item.order_id
@@ -290,6 +319,7 @@ def update_cart_item(request, item_id):
     return redirect("cart_view")
 
 
+@login_required
 def remove_from_cart(request, item_id):
     item = Order_Detail.objects.get(id=item_id)
     cart = item.order_id
@@ -309,6 +339,7 @@ def remove_from_cart(request, item_id):
     return redirect("cart_view")
 
 
+@login_required
 def place_order(request):
     cart = Order.objects.get(user_id=request.user, status="c")
     items = Order_Detail.objects.filter(order_id=cart)
@@ -366,6 +397,7 @@ def place_order(request):
     return redirect("cart_view")
 
 
+@login_required
 def thank_you(request, order_id):
     order = Order.objects.get(id=order_id, user_id=request.user)
     items = Order_Detail.objects.filter(order_id=order)
@@ -627,12 +659,14 @@ def thank_you(request, order_id):
     )
 
 
+@login_required
 def customer_orders(request):
     orders = Order.objects.filter(user_id=request.user).order_by("-date_placed")
 
     return render(request, "orders.html", {"orders": orders})
 
 
+@login_required
 def customer_order_detail(request, order_id):
     order = Order.objects.get(id=order_id, user_id=request.user)
     items = Order_Detail.objects.filter(order_id=order)
@@ -647,8 +681,8 @@ def customer_order_detail(request, order_id):
     )
 
 
+@admin_required
 def analytical_dashboard(request):
-
     date_labels = []
     revenue_data = []
     quantity_data = []
@@ -711,7 +745,7 @@ def analytical_dashboard(request):
     return render(request, "main/analytical_dashboard.html", context)
 
 
-class ProductList(ListView):
+class ProductList(AdminRequiredMixin, ListView):
     model = Product
 
     def get_queryset(self):
@@ -728,29 +762,11 @@ class ProductList(ListView):
         return queryset
 
 
-class ProductDetail(DetailView):
+class ProductDetail(AdminRequiredMixin, DetailView):
     model = Product
 
 
-class ProductCreate(CreateView):
-    model = Product
-    fields = [
-        "name",
-        "description",
-        "image",
-        "price",
-        "price_id",
-        "weight",
-        "stock",
-        "category",
-    ]
-
-    def form_valid(self, form):
-        form.instance.added_by = self.request.user
-        return super().form_valid(form)
-
-
-class ProductUpdate(UpdateView):
+class ProductCreate(AdminRequiredMixin, CreateView):
     model = Product
     fields = [
         "name",
@@ -768,16 +784,34 @@ class ProductUpdate(UpdateView):
         return super().form_valid(form)
 
 
-class ProductDelete(DeleteView):
+class ProductUpdate(AdminRequiredMixin, UpdateView):
+    model = Product
+    fields = [
+        "name",
+        "description",
+        "image",
+        "price",
+        "price_id",
+        "weight",
+        "stock",
+        "category",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class ProductDelete(AdminRequiredMixin, DeleteView):
     model = Product
     success_url = "/manage/products/"
 
 
-class CategoryList(ListView):
+class CategoryList(AdminRequiredMixin, ListView):
     model = Category
 
 
-class CategoryCreate(CreateView):
+class CategoryCreate(AdminRequiredMixin, CreateView):
     model = Category
     fields = ["name"]
 
@@ -786,7 +820,7 @@ class CategoryCreate(CreateView):
         return super().form_valid(form)
 
 
-class CategoryUpdate(UpdateView):
+class CategoryUpdate(AdminRequiredMixin, UpdateView):
     model = Category
     fields = [
         "name",
@@ -797,12 +831,23 @@ class CategoryUpdate(UpdateView):
         return super().form_valid(form)
 
 
-class CategoryDelete(DeleteView):
+class CategoryUpdate(AdminRequiredMixin, UpdateView):
+    model = Category
+    fields = [
+        "name",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class CategoryDelete(AdminRequiredMixin, DeleteView):
     model = Category
     success_url = "/manage/categories/"
 
 
-class OrderList(ListView):
+class OrderList(AdminRequiredMixin, ListView):
     model = Order
 
 
@@ -845,7 +890,7 @@ OVERCLOCK is an e-commerce website where customers can browse and purchase PC pa
    - Email confirmations sent after successful orders
 
 4. **Product Information:**
-   - All products have: name, description, image, price (in USD - United States Dollar), weight, stock quantity, category
+   - All products have: name, description, image, price, weight, stock quantity, category
    - Products are organized by categories
    - Stock is automatically updated after orders
 
@@ -871,7 +916,7 @@ OVERCLOCK is an e-commerce website where customers can browse and purchase PC pa
 - Provide clear, concise answers
 - If you don't have specific information, acknowledge it and suggest contacting support
 - Guide users through processes step-by-step when needed
-- Always mention that prices are in USD (US Dollar)
+- Always mention that prices are in USD
 
 **Out of Scope - Politely Decline:**
 If asked about anything NOT related to OVERCLOCK or PC hardware (politics, general knowledge, other websites, etc.), respond with:
