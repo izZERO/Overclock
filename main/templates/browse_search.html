@@ -1,0 +1,72 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+
+  <div class="mb-3">
+    <form action="{% url 'browse_search' %}" class="d-flex gap-2">
+      <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search products by name, description, or category..."
+        value="{{ request.GET.search }}"
+        style="max-width: 500px"
+      />
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-search"></i> Search
+      </button>
+      {% if request.GET.search %}
+      <a href="{% url 'browse' %}" class="btn btn-secondary">
+        <i class="bi bi-x-circle"></i> Clear
+      </a>
+      {% endif %}
+    </form>
+    {% if request.GET.search %}
+    <p class="text-muted mt-2">
+      Showing results for: <strong>"{{ request.GET.search }}"</strong>
+      {% if products.count == 0 %} - No products found. {% else %} - Found
+      {{ products.count }} products: {% endif %}
+    </p>
+    {% endif %}
+  </div>
+
+  {% if products %}
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for product in products %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <img
+          src="{% static product.image|cut:'main/static/' %}"
+          class="card-img-top"
+          alt="{{ product.name }}"
+          style="height: 200px; object-fit: cover"
+        />
+
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text text-muted small flex-grow-1">
+            {{ product.description|truncatewords:15 }}
+          </p>
+
+          <div class="mt-3">
+            <p class="fw-bold text-primary mb-3">{{ product.price }} USD</p>
+            <a
+              href="{% url 'customer_product_detail' product.id %}"
+              class="btn btn-primary btn-sm w-100"
+            >
+              <i class="bi bi-eye me-1"></i>View Details
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="alert alert-info">
+    <i class="bi bi-info-circle me-2"></i>No products available in this
+    category.
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

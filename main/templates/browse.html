@@ -3,6 +3,34 @@
 <div class="container my-5">
   <h1 class="mb-4 fw-bold"><i class="bi bi-shop me-2"></i>Browse Products</h1>
 
+  <div class="mb-3">
+    <form action="{% url 'browse_search' %}" class="d-flex gap-2">
+      <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search products by name, description, or category..."
+        value="{{ request.GET.search }}"
+        style="max-width: 500px"
+      />
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-search"></i> Search
+      </button>
+      {% if request.GET.search %}
+      <a href="{% url 'browse' %}" class="btn btn-secondary">
+        <i class="bi bi-x-circle"></i> Clear
+      </a>
+      {% endif %}
+    </form>
+    {% if request.GET.search %}
+    <p class="text-muted mt-2">
+      Showing results for: <strong>"{{ request.GET.search }}"</strong>
+      {% if product_set.count == 0 %} - No products found. {% else %} - Found
+      {{ product_set.count }} products: {% endif %}
+    </p>
+    {% endif %}
+  </div>
+
   {% for category in categories %}
   <div class="mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
