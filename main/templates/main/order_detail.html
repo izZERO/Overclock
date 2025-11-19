@@ -21,7 +21,7 @@
 
             <span class="badge rounded-pill text-bg-primary">
               <i class="bi bi-currency-dollar me-2"></i>
-              Total: {{ order.total_cost }} BHD
+              Total: {{ order.total_cost }} USD
             </span>
 
             <span class="badge rounded-pill text-bg-primary">
@@ -124,7 +124,7 @@
           <h6 class="mb-0">Summary</h6>
         </div>
         <div class="card-body">
-          <p class="mb-1"><strong>Total:</strong> {{ order.total_cost }} BHD</p>
+          <p class="mb-1"><strong>Total:</strong> {{ order.total_cost }} USD</p>
           <p class="mb-1"><strong>Items:</strong> {{ items|length }}</p>
           <p class="mb-0"><strong>Placed:</strong> {{ order.date_placed }}</p>
         </div>
@@ -146,9 +146,9 @@
                 <tr>
                   <th>Image</th>
                   <th>Product</th>
-                  <th>Price (BHD)</th>
+                  <th>Price (USD)</th>
                   <th>Quantity</th>
-                  <th>Line Total (BHD)</th>
+                  <th>Line Total (USD)</th>
                 </tr>
               </thead>
               <tbody>

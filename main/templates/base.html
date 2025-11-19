@@ -76,9 +76,12 @@
         </li>
         <li class="nav-link px-2 link-secondary">|</li>
         <li>
-          <a href="{%url 'profile-view'%}" class="nav-link px-2 link-secondary">
-            <i class="bi bi-compass text-info" style="font-size: 1.1rem"></i>
-            Profile
+          <a
+            href="{%url 'customer_orders'%}"
+            class="nav-link px-2 link-secondary"
+          >
+            <i class="bi bi-box-seam text-info" style="font-size: 1.1rem"></i>
+            Orders
           </a>
         </li>
       </ul>
@@ -102,8 +105,8 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end text-small shadow">
               <li>
-                <a class="dropdown-item" href="{% url 'customer_orders' %}"
-                  >My Orders</a
+                <a class="dropdown-item" href="{% url 'profile-view' %}"
+                  >Profile</a
                 >
               </li>
 

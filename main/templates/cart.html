@@ -30,7 +30,7 @@
 
         <td>{{ item.product_id.name }}</td>
 
-        <td>{{ item.product_id.price }} BHD</td>
+        <td>{{ item.product_id.price }} USD</td>
 
         <td>
           <form
@@ -54,7 +54,7 @@
           </form>
         </td>
 
-        <td>{{ item.order_cost }} BHD</td>
+        <td>{{ item.order_cost }} USD</td>
 
         <td>
           <form
@@ -72,7 +72,7 @@
   </table>
 
   <div class="text-end mt-4">
-    <h4>Total: {{ cart.total_cost }} BHD</h4>
+    <h4>Total: {{ cart.total_cost }} USD</h4>
   </div>
 
   {% if error %}

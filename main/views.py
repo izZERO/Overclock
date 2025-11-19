@@ -6,7 +6,7 @@ from .forms import RegisterForm, UpdateUserForm, UpdateProfileForm, UpdateStatus
 from django.views import View
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.db.models import Q
@@ -16,27 +16,6 @@ from datetime import datetime, timedelta
 import json
 from django.http import JsonResponse
 import google.generativeai as genai
-
-
-# Admin middleware
-# https://www.reddit.com/r/django/comments/mo19nw/restrict_access_to_views_based_on_users_role_and/
-# https://micropyramid.medium.com/custom-decorators-to-check-user-roles-and-permissions-in-django-ece6b8a98d9d
-def is_admin(user):
-    try:
-        profile = user.profile
-        return profile.role == "Admin"
-    except Profile.DoesNotExist:
-        return False
-
-
-admin_required = user_passes_test(lambda u: is_admin(u), login_url="manage/dashboard")
-
-
-class AdminRequiredMixin:
-    def dispatch(self, request, *args, **kwargs):
-        if not is_admin(request.user):
-            return redirect("manage/dashboard")
-        return super().dispatch(request, *args, **kwargs)
 
 
 def landing(request):
@@ -61,6 +40,16 @@ def browse_category(request, category_id):
     return render(
         request, "browse_category.html", {"category": category, "products": products}
     )
+
+
+def browse_search(request):
+    search_query = request.GET.get("search")
+    products = Product.objects.filter(
+        Q(name__icontains=search_query)
+        | Q(description__icontains=search_query)
+        | Q(category__name__icontains=search_query)
+    )
+    return render(request, "browse_search.html", {"products": products})
 
 
 def customer_product_detail(request, product_id):
@@ -658,7 +647,6 @@ def customer_order_detail(request, order_id):
     )
 
 
-@admin_required
 def analytical_dashboard(request):
 
     date_labels = []
@@ -723,7 +711,7 @@ def analytical_dashboard(request):
     return render(request, "main/analytical_dashboard.html", context)
 
 
-class ProductList(AdminRequiredMixin, ListView):
+class ProductList(ListView):
     model = Product
 
     def get_queryset(self):
@@ -740,29 +728,11 @@ class ProductList(AdminRequiredMixin, ListView):
         return queryset
 
 
-class ProductDetail(AdminRequiredMixin, DetailView):
+class ProductDetail(DetailView):
     model = Product
 
 
-class ProductCreate(AdminRequiredMixin, CreateView):
-    model = Product
-    fields = [
-        "name",
-        "description",
-        "image",
-        "price",
-        "price_id",
-        "weight",
-        "stock",
-        "category",
-    ]
-
-    def form_valid(self, form):
-        form.instance.added_by = self.request.user
-        return super().form_valid(form)
-
-
-class ProductUpdate(AdminRequiredMixin, UpdateView):
+class ProductCreate(CreateView):
     model = Product
     fields = [
         "name",
@@ -780,16 +750,34 @@ class ProductUpdate(AdminRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class ProductDelete(AdminRequiredMixin, DeleteView):
+class ProductUpdate(UpdateView):
+    model = Product
+    fields = [
+        "name",
+        "description",
+        "image",
+        "price",
+        "price_id",
+        "weight",
+        "stock",
+        "category",
+    ]
+
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
+
+
+class ProductDelete(DeleteView):
     model = Product
     success_url = "/manage/products/"
 
 
-class CategoryList(AdminRequiredMixin, ListView):
+class CategoryList(ListView):
     model = Category
 
 
-class CategoryCreate(AdminRequiredMixin, CreateView):
+class CategoryCreate(CreateView):
     model = Category
     fields = ["name"]
 
@@ -809,23 +797,12 @@ class CategoryUpdate(UpdateView):
         return super().form_valid(form)
 
 
-class CategoryUpdate(AdminRequiredMixin, UpdateView):
-    model = Category
-    fields = [
-        "name",
-    ]
-
-    def form_valid(self, form):
-        form.instance.added_by = self.request.user
-        return super().form_valid(form)
-
-
-class CategoryDelete(AdminRequiredMixin, DeleteView):
+class CategoryDelete(DeleteView):
     model = Category
     success_url = "/manage/categories/"
 
 
-class OrderList(AdminRequiredMixin, ListView):
+class OrderList(ListView):
     model = Order
 
 
@@ -868,7 +845,7 @@ OVERCLOCK is an e-commerce website where customers can browse and purchase PC pa
    - Email confirmations sent after successful orders
 
 4. **Product Information:**
-   - All products have: name, description, image, price (in BHD - Bahraini Dinar), weight, stock quantity, category
+   - All products have: name, description, image, price (in USD - United States Dollar), weight, stock quantity, category
    - Products are organized by categories
    - Stock is automatically updated after orders
 
@@ -894,7 +871,7 @@ OVERCLOCK is an e-commerce website where customers can browse and purchase PC pa
 - Provide clear, concise answers
 - If you don't have specific information, acknowledge it and suggest contacting support
 - Guide users through processes step-by-step when needed
-- Always mention that prices are in BHD (Bahraini Dinar)
+- Always mention that prices are in USD (US Dollar)
 
 **Out of Scope - Politely Decline:**
 If asked about anything NOT related to OVERCLOCK or PC hardware (politics, general knowledge, other websites, etc.), respond with:
