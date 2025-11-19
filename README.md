@@ -36,31 +36,55 @@ E-commerce site for PC-Parts with Inventory management, Analytical Dashboard and
 ***
 # ***technologies Used***
 1. HTML5 (Hyper Text Markup Language 5)
-2. CSS (Cascading Style Sheets), Bootstrap 5
-3. Python (Object Oriented Language), Django Library
-4. PostgreSQL, pgAdmin 4
+2. CSS (Cascading Style Sheets)
+3. Bootstrap 5
+4. Python (Object Oriented Language)
+5. PostgreSQL, pgAdmin 4
+6. Django Framework
+7. Google Gemini for Chatbot
+8. Stripe for Payment processing
+9. Chart.js for Analytical Charts
 
 
 # ***Figma Design***
 * [Figma Design Link](https://www.figma.com/design/DeDPWSHeOtM5PKzq4j9nbs/Overclock?node-id=0-1&t=M5wRPPHdDf65ffQ7-1)
 
-![Design](./Images/Design.png)
+![Design](./main/static/images/Design.png)
 
 # ***ERD Design***
 * [ERD Design Link](https://lucid.app/lucidchart/ff3023cd-d98d-48c8-a6a4-d534bf7e0cac/edit?invitationId=inv_bdab7c2e-6a40-45cf-b1d4-c25cc91007be)
 
-![Design](./Images/Design.png)
+![Design](./main/static/images/ERD.png)
 
 # ***Screenshots***
 ### Landing Page
 
-![LandingPage](./Images/LandingPage.png)
+![LandingPage](./main/static/images/landing.png)
+
+### Browse Page
+
+![BrowsePage](./main/static/images/Browse.png)
+
+### Profile Page
+
+![ProfilePage](./main/static/images/Profile.png)
+
+### Cart Page
+
+![CartPage](./main/static/images/Cart.png)
+
+
+### Payment Page
+
+![PaymentPage](./main/static/images/Payment.png)
+
+
+### Dashboard Page
+
+![DashboardPage](./main/static/images/Dashboard.png)
 
 
 # ***Future Work***
 - [ ] Live chat consultation
-- [ ] Search bar
 - [ ] Sort items by quantity, price, and such.
-- [ ] Toggle Theme (Dark / Light) Modes
 
-# ***Credits***
