@@ -19,6 +19,7 @@
 
   <div class="row">
     {% for order in orders %}
+    {% if order.status != "c" %}
     <div class="col-12 mb-4">
       <div class="card shadow-sm">
         <div class="card-header">
@@ -86,6 +87,7 @@
         </div>
       </div>
     </div>
+    {% endif %}
     {% endfor %}
   </div>
 
