@@ -853,7 +853,6 @@ class OrderList(AdminRequiredMixin, ListView):
 
 def chatbot(request):
     genai.configure(api_key=settings.GOOGLE_API_KEY)
-    print("Gemini API Key:", settings.GOOGLE_API_KEY)
     model = genai.GenerativeModel(
         "gemini-flash-latest",
         system_instruction="""

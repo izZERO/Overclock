@@ -5,9 +5,6 @@
       <h1 class="mb-1"><i class="bi bi-bag-check me-2"></i>My Orders</h1>
       <p class="text-muted">View and track all your orders</p>
     </div>
-    <a href="{% url 'profile-view' %}" class="btn btn-outline-secondary">
-      <i class="bi bi-arrow-left me-1"></i>Back to Profile
-    </a>
   </div>
 
   {% if orders %}
@@ -18,7 +15,7 @@
   </div>
 
   <div class="row">
-    {% for order in orders %}
+    {% for order in orders %} {% if order.status != "c" %}
     <div class="col-12 mb-4">
       <div class="card shadow-sm">
         <div class="card-header">
@@ -68,7 +65,7 @@
               <h6 class="mb-3">
                 <i class="bi bi-geo-alt me-2"></i>Shipping Details
               </h6>
-              <p class="mb-1">Address: {{ order.shipping_address }}</p>
+              <p class="mb-1"><i class="bi bi-geo me-2"></i>Address: {{ order.shipping_address }}</p>
               <p class="mb-0">
                 <i class="bi bi-telephone me-2"></i>Phone Number: {{ user.profile.phone }}
               </p>
@@ -85,7 +82,7 @@
         </div>
       </div>
     </div>
-    {% endfor %}
+    {% endif %} {% endfor %}
   </div>
 
   {% else %}

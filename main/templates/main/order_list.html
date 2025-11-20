@@ -8,6 +8,7 @@
       {% if order_list %}
       <div class="list-group">
         {% for order in order_list %}
+        {% if order.status != "c" %}
         <div class="card shadow-sm mb-3">
           <div
             class="card-header d-flex justify-content-between align-items-center"
@@ -63,6 +64,7 @@
             </div>
           </div>
         </div>
+        {% endif %}
         {% endfor %}
       </div>
       {% else %}
